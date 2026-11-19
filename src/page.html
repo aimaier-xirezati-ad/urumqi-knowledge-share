@@ -1,0 +1,2229 @@
+<title>ウルムチから来ました</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="ウルムチ出身者による、新疆とウルムチを紹介するスクロール型ナレッジシェア">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* Layout: 映画的なスクロール。雪の舞うヒーロー → 夜空の地図 → 横に流れる自然ギャラリー。章の間はアトラスシルク柄の帯 */
+:root {
+  --bg: #f4f6f9;
+  --bg-2: #e9edf3;
+  --card: #ffffff;
+  --fg: #132036;
+  --muted: #56647c;
+  --line: #d6dde8;
+  --lapis: #1d4f9e;
+  --pom: #c0233d;
+  --saffron: #e09a2f;
+  /* 夜空パネル（両テーマ共通の固定色） */
+  --night: #081120;
+  --night-2: #12203a;
+  --night-line: rgba(140, 196, 255, .14);
+  --glow: #8cc4ff;
+  --night-fg: #e6eefb;
+  --night-muted: #8b9bb8;
+  --jp-glow: #ff8fa6;
+  --sky-dawn: #f6b26b;
+  --sky-day: #7cc0f5;
+  --on-photo: #ffffff;
+  --scrim: rgba(6, 12, 26, .82);
+  --f-display: "Dela Gothic One", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --f-body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --step--1: .82rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.6rem;
+  --step-3: clamp(2rem, 4.6vw, 3.4rem);
+  --step-4: clamp(3rem, 9vw, 7.4rem);
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1524; --bg-2: #121d31; --card: #16223a; --fg: #e7ecf4; --muted: #9eabc1;
+    --line: #26344d; --lapis: #86aef0; --pom: #f0647d; --saffron: #f0b45a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1524; --bg-2: #121d31; --card: #16223a; --fg: #e7ecf4; --muted: #9eabc1;
+  --line: #26344d; --lapis: #86aef0; --pom: #f0647d; --saffron: #f0b45a; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.8;
+  -webkit-font-smoothing: antialiased; overflow-x: clip;
+}
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--lapis); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--saffron); outline-offset: 3px; border-radius: 4px; }
+img { display: block; max-width: 100%; }
+
+.wrap {
+  width: 100%; max-width: 1180px; margin-inline: auto;
+  padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+}
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .16em;
+  text-transform: uppercase; color: var(--pom);
+}
+.eyebrow::before { content: ""; width: 36px; height: 1px; background: currentColor; }
+
+/* ---------- top bar (ヒーロー上では透明、スクロールで実体化) ---------- */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+  padding-top: env(safe-area-inset-top, 0px);
+  color: #fff; transition: background .35s, color .35s, border-color .35s;
+  border-bottom: 1px solid transparent;
+}
+.topbar.solid {
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: var(--line); color: var(--fg);
+}
+.topbar .wrap { display: flex; align-items: center; gap: 18px; height: 56px; }
+.brand { font-family: var(--f-display); font-size: 1rem; white-space: nowrap; color: inherit; text-decoration: none; }
+.toc { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; min-width: 0; margin-left: auto; }
+.toc::-webkit-scrollbar { display: none; }
+.toc a {
+  font-size: var(--step--1); white-space: nowrap; text-decoration: none; color: inherit; opacity: .78;
+  padding: 4px 11px; border-radius: 999px; transition: background .2s, color .2s, opacity .2s;
+}
+.toc a:hover { opacity: 1; }
+.toc a.on { opacity: 1; background: var(--pom); color: #fff; }
+.progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; background: linear-gradient(90deg, var(--saffron), var(--pom)); transform-origin: 0 50%; transform: scaleX(0); }
+
+/* ---------- hero ---------- */
+.hero { position: relative; overflow: hidden; min-height: min(100svh, 1000px); display: flex; align-items: flex-end; color: var(--on-photo); background: var(--night); }
+.hero__img { position: absolute; inset: -4% 0 0; width: 100%; height: 110%; object-fit: cover; object-position: center 40%; transform-origin: 50% 40%; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6,12,26,.55) 0%, rgba(6,12,26,0) 30%, rgba(6,12,26,.1) 55%, var(--scrim) 100%); pointer-events: none; }
+#snow { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+.hero__body { position: relative; z-index: 2; padding-block: 120px 72px; display: grid; gap: 20px; }
+.hero .eyebrow { color: #ffd48a; }
+.hero h1 { font-family: var(--f-display); font-weight: 400; font-size: var(--step-4); line-height: 1.08; letter-spacing: .01em; text-shadow: 0 6px 40px rgba(0,0,0,.35); }
+.hero h1 .ch { display: inline-block; will-change: transform; }
+.hero__sub { font-size: clamp(1.05rem, 2vw, 1.35rem); max-width: 34em; color: rgba(255,255,255,.92); }
+.names { display: flex; flex-wrap: wrap; gap: 8px 26px; align-items: baseline; font-size: var(--step-0); color: rgba(255,255,255,.88); }
+.names .ug { font-size: 1.4rem; direction: rtl; font-family: "Noto Naskh Arabic", "Geeza Pro", "Al Bayan", serif; }
+.hero__meta { font-family: var(--f-mono); font-size: var(--step--1); letter-spacing: .06em; color: rgba(255,255,255,.75); }
+.scroll-cue { position: absolute; z-index: 2; left: 50%; bottom: 18px; transform: translateX(-50%); display: grid; justify-items: center; gap: 8px; font-family: var(--f-mono); font-size: 10px; letter-spacing: .3em; color: rgba(255,255,255,.7); }
+.scroll-cue i { width: 1px; height: 44px; background: linear-gradient(rgba(255,255,255,0), #fff); animation: cue 2s ease-in-out infinite; transform-origin: top; }
+@keyframes cue { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+.intro #title .ch { animation: rise 1.3s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(.25s + var(--i) * 55ms); }
+.intro .hero-in { animation: fadeUp 1s cubic-bezier(.16,1,.3,1) both; animation-delay: calc(.95s + var(--d, 0) * 120ms); }
+.intro .hero__img { animation: kb 3.4s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes rise { from { transform: translateY(110%) rotate(8deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes fadeUp { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes kb { from { scale: 1.22; } to { scale: 1; } }
+.photo-credit { position: absolute; right: var(--gutter-r); bottom: 10px; z-index: 2; font-size: 11px; color: rgba(255,255,255,.6); font-family: var(--f-mono); }
+
+/* ---------- ikat band (アトラスシルク風の区切り、ゆっくり流れる) ---------- */
+.ikat {
+  height: 18px;
+  background:
+    repeating-linear-gradient(90deg,
+      var(--pom) 0 22px, var(--saffron) 22px 34px, var(--lapis) 34px 60px,
+      var(--bg) 60px 66px, var(--fg) 66px 80px, var(--saffron) 80px 88px, var(--pom) 88px 110px, var(--bg) 110px 114px);
+  background-size: 228px 100%;
+  filter: blur(.7px);
+  -webkit-mask: repeating-linear-gradient(0deg, #000 0 3px, rgba(0,0,0,.72) 3px 4px);
+          mask: repeating-linear-gradient(0deg, #000 0 3px, rgba(0,0,0,.72) 3px 4px);
+  animation: silk 18s linear infinite;
+}
+@keyframes silk { to { background-position: 228px 0; } }
+
+/* ---------- marquee ---------- */
+.marquee { overflow: hidden; padding-block: clamp(28px, 5vw, 56px); background: var(--bg); border-block: 1px solid var(--line); }
+.marquee__row { display: flex; white-space: nowrap; font-family: var(--f-display); font-size: clamp(3rem, 10vw, 8.5rem); line-height: 1.1; will-change: transform; }
+.marquee__row span { padding-right: .5em; }
+.marquee__row.outline { color: transparent; -webkit-text-stroke: 1.5px var(--fg); }
+.marquee__row.fill { color: var(--pom); }
+.marquee__row .ug { font-family: "Noto Naskh Arabic", "Geeza Pro", "Al Bayan", serif; font-weight: 700; }
+
+/* ---------- sections ---------- */
+section.chapter { padding-block: clamp(72px, 11vw, 140px); scroll-margin-top: 56px; position: relative; }
+.chapter--alt { background: var(--bg-2); }
+.head { display: grid; gap: 16px; margin-bottom: clamp(36px, 5vw, 64px); max-width: 48em; }
+.head h2 { font-family: var(--f-display); font-weight: 400; font-size: var(--step-3); line-height: 1.22; }
+.head p { color: var(--muted); font-size: var(--step-1); line-height: 1.75; }
+.lede { font-size: var(--step-1); max-width: 34em; }
+
+/* ---------- night map ---------- */
+.night { background: radial-gradient(120% 90% at 30% 0%, var(--night-2) 0%, var(--night) 60%); color: var(--night-fg); }
+.night .head p { color: var(--night-muted); }
+.night .eyebrow { color: var(--saffron); }
+.map-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.map-card { position: relative; border: 1px solid var(--night-line); border-radius: 18px; overflow: hidden; background: rgba(255,255,255,.02); box-shadow: 0 30px 80px rgba(0,0,0,.35); }
+.map-svg { width: 100%; height: auto; display: block; touch-action: none; }
+.map-svg .grat { fill: none; stroke: var(--night-line); stroke-width: 1; }
+.map-svg .xj { fill: url(#xjGrad); stroke: var(--glow); stroke-width: 1.6; }
+.map-svg .xj-glow { fill: none; stroke: var(--glow); stroke-width: 6; opacity: .45; filter: url(#blur); }
+.map-svg .route { fill: none; stroke: var(--saffron); stroke-width: 2.4; stroke-dasharray: 2 7; stroke-linecap: round; }
+.map-svg .route-label { font-family: var(--f-mono); font-size: 13px; fill: var(--saffron); letter-spacing: .08em; }
+.map-svg .jp path { fill: rgba(240, 90, 120, .5); stroke: var(--jp-glow); stroke-width: 1; }
+.map-svg .jp { cursor: grab; filter: drop-shadow(0 0 10px rgba(255, 120, 150, .55)); }
+.map-svg .jp.dragging { cursor: grabbing; }
+.map-svg .pin circle { fill: var(--glow); }
+.map-svg .pin .halo { fill: none; stroke: var(--glow); stroke-width: 1.5; opacity: .6; }
+.map-svg .pin.main circle { fill: #ff5d7a; }
+.map-svg .pin.main .halo { stroke: #ff5d7a; }
+.map-svg .pin text, .map-svg .area-label { font-family: var(--f-body); font-size: 15px; fill: var(--night-fg); }
+.map-svg .pin.main text { font-weight: 700; font-size: 19px; }
+.map-svg .area-label { fill: var(--night-muted); font-size: 14px; letter-spacing: .3em; }
+.map-svg .pole path { fill: var(--saffron); }
+.map-svg .nb { fill: rgba(140,196,255,.05); stroke: rgba(140,196,255,.32); stroke-width: .9; transition: fill .5s, stroke .5s; }
+.map-svg .nb.cn { fill: rgba(140,196,255,.1); }
+.map-svg .nb.on { fill: rgba(224,154,47,.28); stroke: var(--saffron); }
+.map-svg .nb-l { transition: opacity .4s; }
+.map-svg .nb-l circle { fill: var(--night); stroke: var(--saffron); stroke-width: 1.5; }
+.map-svg .nb-l .n { font: 700 11px var(--f-mono); fill: var(--saffron); }
+.map-svg .nb-l .t { font: 500 14px var(--f-body); fill: var(--night-fg); paint-order: stroke; stroke: var(--night); stroke-width: 4px; stroke-linejoin: round; }
+.map-svg .nb-l .t.cn { fill: var(--night-muted); font-size: 13px; }
+.fact--btn { cursor: pointer; }
+.fact--btn:hover dt { color: var(--saffron); }
+.map-svg .jp-label { font-family: var(--f-display); font-size: 24px; fill: #fff; pointer-events: none; }
+.pulse { animation: pulse 2.4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pulse { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.6); opacity: 0; } }
+.map-bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; padding: 12px 16px; border-top: 1px solid var(--night-line); font-size: var(--step--1); color: var(--night-muted); }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  font: 500 var(--step--1)/1 var(--f-body); color: var(--night-fg); background: transparent;
+  border: 1px solid rgba(230,238,251,.3); border-radius: 999px; padding: 10px 16px; cursor: pointer; transition: border-color .2s, transform .2s;
+}
+.btn:hover { border-color: var(--night-fg); transform: translateY(-1px); }
+.btn--primary { background: #e23a58; border-color: #e23a58; color: #fff; box-shadow: 0 0 24px rgba(226,58,88,.45); }
+.btn--primary:hover { border-color: #ff6f8a; }
+.facts { display: grid; margin: 0; }
+.fact { display: grid; gap: 2px; padding-block: 18px; border-bottom: 1px solid var(--night-line); }
+.fact:first-child { padding-top: 0; }
+.fact dt { font-size: var(--step--1); color: var(--night-muted); }
+.fact dd { margin: 0; font-family: var(--f-display); font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1.3; font-variant-numeric: tabular-nums; }
+.fact dd small { font-family: var(--f-body); font-size: var(--step--1); color: var(--night-muted); margin-left: 8px; }
+.fact dd .unit { font-size: .55em; margin-left: 3px; color: var(--glow); }
+
+/* ---------- globe ---------- */
+.far { background: radial-gradient(90% 70% at 72% 28%, #11264f 0%, var(--night) 62%); color: var(--night-fg); overflow: hidden; }
+.far::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .55;
+  background-image:
+    radial-gradient(1.3px 1.3px at 8% 14%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 23% 61%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 41% 9%, #cfe3ff 50%, transparent 51%), radial-gradient(1.5px 1.5px at 57% 77%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 69% 33%, #fff 50%, transparent 51%), radial-gradient(1.2px 1.2px at 86% 52%, #ffe7c2 50%, transparent 51%),
+    radial-gradient(1px 1px at 94% 6%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 33% 88%, #cfe3ff 50%, transparent 51%);
+  background-size: 380px 380px;
+}
+.far .wrap { position: relative; }
+.far .head p { color: var(--night-muted); }
+.far .eyebrow { color: var(--saffron); }
+.globe-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.globe-stage { position: relative; }
+#globe-cv { width: 100%; aspect-ratio: 1; display: block; touch-action: none; cursor: grab; border-radius: 50%; }
+#globe-cv.dragging { cursor: grabbing; }
+.g-phase {
+  position: absolute; left: 50%; top: 0; transform: translateX(-50%); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+  font-size: var(--step--1); color: var(--night-fg); padding: 8px 16px; border: 1px solid rgba(224,154,47,.5); border-radius: 999px;
+  background: rgba(8,17,32,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); box-shadow: 0 0 24px rgba(224,154,47,.2);
+}
+.g-hint { text-align: center; font-size: 12px; color: var(--night-muted); margin-top: 10px; }
+.hud { display: grid; gap: 22px; }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid rgba(230,238,251,.22); border-radius: 22px; justify-self: start; }
+.seg button { font: 500 var(--step--1)/1.3 var(--f-body); color: var(--night-muted); background: transparent; border: 0; border-radius: 18px; padding: 9px 14px; cursor: pointer; transition: background .25s, color .25s; }
+.seg button:hover { color: var(--night-fg); }
+.seg button[aria-pressed="true"] { background: var(--night-fg); color: var(--night); }
+.hud-big { display: grid; gap: 4px; }
+.hud-big > span { font-size: var(--step--1); color: var(--night-muted); }
+.hud-big b { font-family: var(--f-mono); font-weight: 500; font-size: clamp(2.6rem, 6vw, 4.2rem); line-height: 1.05; font-variant-numeric: tabular-nums; color: #fff; text-shadow: 0 0 30px rgba(140,196,255,.45); }
+.hud-big b small { font-family: var(--f-body); font-size: .36em; color: var(--glow); margin: 0 .35em 0 .1em; }
+.hud-km { font-size: var(--step--1); color: var(--night-muted); }
+.hud-km b { font-family: var(--f-mono); font-size: 1.3rem; color: var(--saffron); margin: 0 4px; font-variant-numeric: tabular-nums; }
+.hud-clocks { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.hud-clock { border: 1px solid var(--night-line); border-radius: 14px; padding: 12px 16px; background: rgba(255,255,255,.03); }
+.hud-clock span { display: block; font-size: 12px; color: var(--night-muted); }
+.hud-clock time { font-family: var(--f-mono); font-size: clamp(1.4rem, 3vw, 1.9rem); font-variant-numeric: tabular-nums; }
+.legs { list-style: none; margin: 0; padding: 0; }
+.leg { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 2px 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--night-line); color: var(--night-muted); transition: color .3s; }
+.leg::before { content: ""; width: 8px; height: 8px; border-radius: 50%; border: 2px solid currentColor; grid-row: 1; }
+.leg b { font-weight: 700; }
+.leg .dur { font-family: var(--f-mono); font-size: var(--step--1); }
+.leg small { grid-column: 2 / -1; font-size: 12px; line-height: 1.5; }
+.leg.on { color: var(--night-fg); }
+.leg.on::before { background: var(--saffron); border-color: var(--saffron); box-shadow: 0 0 12px var(--saffron); }
+.leg.done::before { background: currentColor; }
+.g-controls { display: flex; gap: 14px; align-items: center; }
+.g-controls .btn { white-space: nowrap; }
+.g-controls input { flex: 1; min-width: 0; accent-color: var(--saffron); }
+.g-note { font-size: var(--step--1); color: var(--night-muted); line-height: 1.75; border-left: 2px solid var(--saffron); padding-left: 14px; }
+.g-note b { color: var(--night-fg); }
+
+/* ---------- city ---------- */
+.city-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 28px); }
+.city-intro { grid-column: span 5; display: grid; gap: 20px; align-content: start; min-width: 0; }
+.city-intro .big-number { font-size: clamp(3.2rem, 7vw, 6rem); }
+.city-photo { grid-column: span 7; }
+.sea-card { grid-column: span 7; position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.sea-svg { width: 100%; height: auto; display: block; }
+.sea-svg .ocean { fill: color-mix(in srgb, var(--lapis) 20%, var(--card)); }
+.sea-svg .land { fill: var(--bg); stroke: color-mix(in srgb, var(--fg) 28%, transparent); stroke-width: .6; }
+.sea-svg .lake { fill: color-mix(in srgb, var(--lapis) 20%, var(--card)); }
+.sea-svg .xj { fill: color-mix(in srgb, var(--lapis) 22%, var(--bg)); stroke: var(--lapis); stroke-width: 1.2; }
+.sea-svg .ring { fill: none; stroke: color-mix(in srgb, var(--fg) 30%, transparent); stroke-width: .8; stroke-dasharray: 2 4; }
+.sea-svg .ring-label { font: 11px var(--f-mono); fill: var(--muted); }
+.sea-svg .reach { fill: color-mix(in srgb, var(--pom) 9%, transparent); stroke: var(--pom); stroke-width: 1.8; stroke-dasharray: 7 5; }
+.sea-svg .ray { fill: none; stroke: var(--pom); stroke-width: 2.4; stroke-linecap: round; }
+.sea-svg .coast { fill: var(--pom); }
+.sea-svg .coast-halo { fill: none; stroke: var(--pom); stroke-width: 1.5; }
+.sea-svg .lbl { font: 600 13px var(--f-body); fill: var(--fg); paint-order: stroke; stroke: var(--card); stroke-width: 4px; stroke-linejoin: round; }
+.sea-svg .lbl.sea { font-weight: 500; fill: var(--lapis); font-size: 12px; letter-spacing: .12em; }
+.sea-svg .lbl.dist { font: 400 22px var(--f-display); fill: var(--pom); }
+.sea-svg .lbl.small { font-weight: 500; font-size: 11px; fill: var(--muted); }
+.sea-svg .pin { fill: var(--pom); stroke: var(--card); stroke-width: 2; }
+.sea-svg .star { fill: var(--saffron); }
+.sea-svg .jp-dot { fill: var(--saffron); }
+.sea-legend { display: flex; flex-wrap: wrap; gap: 6px 20px; padding: 12px 16px; border-top: 1px solid var(--line); font-size: var(--step--1); color: var(--muted); }
+.sea-legend i { display: inline-block; width: 18px; border-top: 2px dashed var(--pom); vertical-align: middle; margin-right: 6px; }
+.sea-legend i.y { border-top: 2px solid var(--saffron); width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--saffron); }
+.city-row { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 28px); margin-top: 16px; }
+figure { margin: 0; }
+.ph { overflow: hidden; border-radius: 14px; background: var(--bg-2); }
+.ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+figure:hover .ph img { transform: scale(1.04); }
+figcaption { display: grid; gap: 2px; margin-top: 12px; }
+figcaption b { font-weight: 700; }
+figcaption span { font-size: var(--step--1); color: var(--muted); line-height: 1.6; }
+.big-number { font-family: var(--f-display); font-size: clamp(3.6rem, 11vw, 8rem); line-height: .95; background: linear-gradient(100deg, var(--pom), var(--saffron)); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
+.big-number .unit { font-size: .32em; margin-left: 6px; }
+.callout { border-left: 3px solid var(--saffron); padding: 4px 0 4px 16px; color: var(--muted); }
+
+/* ---------- time ---------- */
+.clocks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.clock { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; display: grid; gap: 4px; }
+.clock.hl { border-color: var(--pom); box-shadow: 0 0 0 1px var(--pom) inset, 0 18px 50px color-mix(in srgb, var(--pom) 22%, transparent); }
+.clock .city { font-size: var(--step--1); color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.clock time { font-family: var(--f-mono); font-size: clamp(2rem, 5vw, 3.1rem); font-weight: 500; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.clock .note { font-size: var(--step--1); color: var(--muted); }
+.sun { margin-top: 44px; display: grid; gap: 22px; }
+.sun h3 { font-size: var(--step-1); }
+.sunrow { display: grid; grid-template-columns: 210px minmax(0, 1fr) 96px; gap: 6px 20px; align-items: center; }
+.sun-rows { display: grid; gap: 12px; }
+.sun-note { font-size: var(--step--1); color: var(--muted); margin-top: -12px; }
+.sunrow .len { font-family: var(--f-mono); font-size: var(--step--1); text-align: right; font-variant-numeric: tabular-nums; }
+.sunrow .len b { display: block; font-size: 1.05rem; color: var(--fg); }
+.sunrow .who .tag { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--line); margin-top: 2px; }
+.sunrow .who .loc { font-family: var(--f-mono); font-size: 11px; }
+.sunrow.hl .who b { color: var(--pom); }
+.sunrow.hl .sunbar { box-shadow: 0 0 0 2px var(--pom); }
+.sunbar .pol { position: absolute; inset: 0; display: grid; place-items: center; font-size: 12px; font-weight: 700; letter-spacing: .06em; }
+.sunbar .pol.night { color: #b9c8e6; }
+.sunbar .pol.day { color: var(--night); }
+.sunrow .who { font-size: var(--step--1); color: var(--muted); line-height: 1.5; }
+.sunrow .who b { display: block; color: var(--fg); font-size: var(--step-0); }
+.sunbar { position: relative; height: 40px; border-radius: 10px; background: var(--night); overflow: hidden; }
+.sunbar .day { position: absolute; top: 0; bottom: 0; border-radius: 10px; background: linear-gradient(90deg, var(--sky-dawn), var(--sky-day) 18%, var(--sky-day) 82%, var(--sky-dawn)); transform-origin: left center; }
+.sunbar .now { position: absolute; top: -4px; bottom: -4px; width: 3px; margin-left: -1px; background: #fff; box-shadow: 0 0 0 2px var(--pom), 0 0 16px var(--pom); border-radius: 2px; }
+.sunbar .lbl { position: absolute; top: 50%; transform: translate(-50%, -50%); font-family: var(--f-mono); font-size: 12px; color: var(--night); font-weight: 500; white-space: nowrap; }
+.ticks { position: relative; height: 18px; font-family: var(--f-mono); font-size: 11px; color: var(--muted); grid-column: 2; }
+.sun-rank { counter-reset: rk; }
+.ticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.ticks span:first-child { transform: none; }
+.ticks span:last-child { transform: translateX(-100%); }
+.day-wrap { margin-top: 44px; overflow-x: auto; }
+table.day { width: 100%; min-width: 520px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.day th, .day td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.day th { font-size: var(--step--1); color: var(--muted); font-weight: 500; }
+.day td.t { font-family: var(--f-mono); font-size: 1.15rem; }
+.day td.t.xj { color: var(--pom); }
+
+/* ---------- food ---------- */
+.track { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 320px); gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 8px 4px 22px; scrollbar-color: var(--line) transparent; }
+.dish { scroll-snap-align: start; display: grid; gap: 12px; align-content: start; perspective: 800px; }
+.dish .ph { aspect-ratio: 4 / 3; position: relative; transform-style: preserve-3d; transition: transform .25s ease-out, box-shadow .25s; will-change: transform; }
+.dish .ph::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,.38), rgba(255,255,255,0) 55%); opacity: 0; transition: opacity .25s; pointer-events: none; }
+.dish:hover .ph { box-shadow: 0 24px 50px rgba(19, 32, 54, .28); }
+.dish:hover .ph::after { opacity: 1; }
+.dish:hover .ph img { transform: none; }
+.dish h3 { font-size: var(--step-1); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.dish h3 small { font-family: var(--f-mono); font-size: var(--step--1); font-weight: 400; color: var(--muted); }
+.dish p { font-size: .94rem; color: var(--muted); line-height: 1.75; }
+.hint { font-size: var(--step--1); color: var(--muted); margin-top: 8px; }
+
+/* ---------- nature: 横に流れるギャラリー ---------- */
+.nature { padding-bottom: 0; background: var(--night); color: var(--night-fg); }
+.nature .head p { color: var(--night-muted); }
+.nature .eyebrow { color: var(--saffron); }
+.fly { position: relative; height: 100vh; height: 100svh; overflow: hidden; color: #fff;
+  background: linear-gradient(180deg, #1f4f8a 0%, #4f86c0 30%, #9cbfe2 58%, #cddbe9 80%, #d6e1ec 100%); }
+.fly canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.fly-pins { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.fly-pins .fly-pin { pointer-events: auto; cursor: pointer; background: none; border: 0; color: #fff; font-family: var(--f-body); padding: 4px 8px 4px 4px; border-radius: 999px; }
+.fly-pins .fly-pin:hover { background: rgba(6,12,26,.6); }
+.fly-pins .fly-pin:focus-visible { outline: 2px solid #ffd48a; }
+.fly-pin { position: absolute; left: 0; top: 0; white-space: nowrap; font-size: 12px; font-weight: 500; text-shadow: 0 1px 3px rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.6); transition: opacity .3s; display: flex; align-items: center; gap: 6px; }
+.fly-pin::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px rgba(0,0,0,.35); flex: none; }
+.fly-pin.on { font-size: 15px; font-weight: 700; }
+.fly-pin.on::before { width: 11px; height: 11px; background: #ff5d7a; box-shadow: 0 0 0 3px rgba(255,93,122,.35), 0 0 18px #ff5d7a; }
+.fly-region { position: absolute; left: 0; top: 0; white-space: nowrap; font-family: var(--f-display); font-size: clamp(12px, 1.3vw, 16px); letter-spacing: .35em; color: rgba(255,255,255,.85); text-shadow: 0 2px 10px rgba(0,0,0,.8); transform: translate(-50%, -50%); transition: opacity .4s; }
+.fly-top { position: absolute; top: 72px; left: var(--gutter-l); display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: var(--step--1); }
+.fly-count { font: 500 var(--step--1) var(--f-mono); letter-spacing: .12em; color: #fff; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.25); cursor: pointer; background: rgba(6,12,26,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.fly-count.start { background: #e23a58; border-color: #e23a58; box-shadow: 0 0 18px rgba(226,58,88,.55); font-weight: 700; }
+.season { padding: 6px 14px; border-radius: 999px; font-weight: 700; background: rgba(6,12,26,.6); border: 1px solid rgba(255,255,255,.25); transition: background .4s, color .4s; }
+.season[data-s="春"] { background: #f29bb5; color: #3a0d1c; border-color: transparent; }
+.season[data-s="夏"] { background: #5fc48a; color: #06291a; border-color: transparent; }
+.season[data-s="秋"] { background: #f0a442; color: #3a2300; border-color: transparent; }
+.season[data-s="冬"] { background: #cfe8ff; color: #0b2340; border-color: transparent; }
+.fly-elev { font-family: var(--f-mono); padding: 6px 12px; border-radius: 999px; background: rgba(6,12,26,.6); }
+.fly-mini { position: absolute; top: 72px; right: var(--gutter-r); width: 180px; height: auto; padding: 8px; border-radius: 14px; background: rgba(6,12,26,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.fly-mini .o { fill: rgba(140,196,255,.18); stroke: var(--glow); stroke-width: 1; }
+.fly-mini .s { fill: #fff; }
+.fly-mini .s.on { fill: #ff5d7a; }
+.fly-mini .me { fill: none; stroke: #ffd48a; stroke-width: 2; }
+.fly-mini path.trail { fill: none; stroke: #ffd48a; stroke-width: 1.2; stroke-dasharray: 2 3; opacity: .8; }
+.fly-cards { position: absolute; left: var(--gutter-l); bottom: 28px; width: min(430px, calc(100% - 32px)); }
+.fcard { position: absolute; left: 0; right: 0; bottom: 0; opacity: 0; transform: translateY(18px); pointer-events: none; border-radius: 18px; overflow: hidden;
+  background: rgba(6,12,26,.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 30px 60px rgba(0,0,0,.4); }
+.fcard { transition: opacity .55s ease, transform .55s ease; }
+.fcard.on { opacity: 1; transform: none; pointer-events: auto; }
+.fcard img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.gal { position: relative; }
+.gal .main { transition: opacity .18s; }
+.gal .gcap { position: absolute; left: 10px; top: 10px; max-width: calc(100% - 20px); font-size: 11px; padding: 3px 9px; border-radius: 999px; background: rgba(6,12,26,.72); }
+.gal .thumbs { position: absolute; left: 10px; bottom: 10px; display: flex; gap: 6px; }
+.gal .thumbs button { width: 54px; height: 36px; padding: 0; border: 2px solid rgba(255,255,255,.45); border-radius: 7px; overflow: hidden; cursor: pointer; background: #000; opacity: .8; transition: border-color .2s, opacity .2s; }
+.gal .thumbs button.on { border-color: #ffd48a; opacity: 1; }
+.gal .thumbs img { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; }
+.fcard .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.fly.no3d .fcard .acts { display: none; }
+.fly-mini .s { cursor: pointer; }
+.fly-mini .s:hover { fill: #ffd48a; }
+.fcard .body { padding: 16px 20px 20px; display: grid; gap: 6px; }
+.fcard .tag { font-family: var(--f-mono); font-size: 11px; letter-spacing: .2em; color: #ffd48a; }
+.fcard h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.4rem, 2.6vw, 2rem); line-height: 1.2; }
+.fcard .spec { font-family: var(--f-mono); font-size: 12px; color: rgba(255,255,255,.72); }
+.fcard p { font-size: .93rem; line-height: 1.75; color: rgba(255,255,255,.9); }
+.fcard--big h3 { font-size: clamp(1.6rem, 3.4vw, 2.6rem); }
+.fly-nav { position: absolute; right: var(--gutter-r); bottom: 28px; display: flex; gap: 8px; }
+.fly-nav .btn { background: rgba(6,12,26,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.fly-note { position: absolute; right: var(--gutter-r); bottom: 84px; font-size: 11px; color: rgba(255,255,255,.75); text-shadow: 0 1px 4px rgba(0,0,0,.8); text-align: right; max-width: 260px; }
+.fly.no3d { height: auto; background: none; padding-block: 8px 0; }
+.fly.no3d canvas, .fly.no3d .fly-pins, .fly.no3d .fly-top, .fly.no3d .fly-mini, .fly.no3d .fly-nav, .fly.no3d .fly-note { display: none; }
+.fly.no3d .fly-cards { position: static; width: auto; display: flex; gap: 16px; overflow-x: auto; padding: 0 var(--gutter-r) 16px var(--gutter-l); scroll-snap-type: x mandatory; }
+.fly.no3d .fcard { position: relative; flex: 0 0 min(80vw, 380px); opacity: 1; transform: none; pointer-events: auto; scroll-snap-align: start; }
+.hs { position: relative; }
+.hs-track {
+  display: flex; gap: clamp(16px, 2.5vw, 32px); overflow-x: auto; scroll-snap-type: x mandatory;
+  padding-left: max(var(--gutter-l), calc((100vw - 1180px) / 2 + 16px)); padding-right: var(--gutter-r);
+  padding-bottom: 24px; scrollbar-color: var(--line) transparent;
+}
+.panel { flex: 0 0 auto; width: min(78vw, 880px); height: min(68vh, 600px); min-height: 360px; position: relative; border-radius: 20px; overflow: hidden; scroll-snap-align: start; color: var(--on-photo); background: var(--night); }
+.panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6,12,26,0) 45%, var(--scrim) 100%); }
+.panel .cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: clamp(18px, 3vw, 36px); display: grid; gap: 6px; }
+.panel .idx { font-family: var(--f-mono); font-size: 12px; letter-spacing: .2em; color: #ffd48a; }
+.panel h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1.15; }
+.panel .spec { font-family: var(--f-mono); font-size: 12px; color: rgba(255,255,255,.75); letter-spacing: .04em; }
+.panel p { max-width: 36em; color: rgba(255,255,255,.9); font-size: .98rem; }
+.panel--end { width: min(60vw, 520px); background: var(--fg); color: var(--bg); display: grid; place-content: center; padding: 40px; }
+.panel--end::after { display: none; }
+.panel--end p { color: inherit; font-family: var(--f-display); font-size: clamp(1.5rem, 3vw, 2.4rem); line-height: 1.35; max-width: 12em; }
+.hs-count { position: absolute; right: var(--gutter-r); top: 24px; z-index: 2; font-family: var(--f-mono); font-size: var(--step--1); color: var(--muted); display: none; }
+.hs.is-pinned { height: 100vh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.hs.is-pinned .hs-track { overflow: visible; scroll-snap-type: none; padding-bottom: 0; will-change: transform; }
+.hs.is-pinned .hs-count { display: block; top: 80px; }
+.nature-tail { height: clamp(72px, 10vw, 120px); }
+
+/* ---------- culture ---------- */
+.culture-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.culture-grid .ph { aspect-ratio: 4 / 5; }
+.music { margin-bottom: clamp(48px, 7vw, 88px); }
+.music-banner { position: relative; border-radius: 18px; overflow: hidden; margin-bottom: 20px; aspect-ratio: 1280 / 270; min-height: 220px; background: var(--night); }
+.music-banner img { width: 100%; height: 100%; object-fit: cover; }
+.music-banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,12,26,.86) 0%, rgba(6,12,26,.35) 55%, rgba(6,12,26,0) 100%); }
+.music-banner .cap { position: absolute; z-index: 1; left: clamp(18px, 3vw, 36px); top: 50%; transform: translateY(-50%); max-width: 30em; color: #fff; display: grid; gap: 8px; }
+.music-banner h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.4rem, 3vw, 2.2rem); line-height: 1.25; }
+.music-banner p { font-size: var(--step--1); color: rgba(255,255,255,.85); }
+.music-banner a { color: #ffd48a; }
+.insts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2vw, 22px); }
+.inst { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; transition: transform .3s, box-shadow .3s; }
+.inst:hover { transform: translateY(-4px); box-shadow: 0 18px 40px color-mix(in srgb, var(--fg) 14%, transparent); }
+.inst .ph { aspect-ratio: 4 / 3; border-radius: 0; background: radial-gradient(circle at 50% 40%, var(--card) 0%, var(--bg-2) 100%); }
+.inst .ph img { object-fit: contain; padding: 12px; }
+.inst .jp { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 12px; align-items: center; margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--saffron) 13%, var(--card)); border: 1px solid color-mix(in srgb, var(--saffron) 35%, transparent); }
+.inst .jp img { grid-row: 1 / span 2; width: 56px; height: 56px; object-fit: contain; background: #fff; border-radius: 10px; padding: 3px; }
+.inst .jp .lab { font-size: 11px; color: var(--muted); align-self: end; }
+.inst .jp b { font-size: var(--step-0); align-self: start; }
+.inst .jp .why { grid-column: 1 / -1; margin-top: 8px; font-size: 12px; line-height: 1.65; color: var(--fg); }
+.inst .body { padding: 14px 16px 16px; display: grid; gap: 4px; align-content: start; }
+.inst .nm { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.inst .nm b { font-size: var(--step-1); }
+.inst .nm .ug { font-family: "Noto Naskh Arabic", "Geeza Pro", "Al Bayan", serif; font-size: 1.35rem; direction: rtl; color: var(--lapis); }
+.inst .lat { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; color: var(--pom); }
+.inst p { font-size: var(--step--1); color: var(--muted); line-height: 1.7; }
+.inst .listen { margin-top: 6px; font-size: var(--step--1); font-weight: 700; text-decoration: none; justify-self: start; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg); }
+.inst .listen:hover { border-color: var(--pom); color: var(--pom); }
+.phrase .lat { font-family: var(--f-mono); font-size: .95rem; letter-spacing: .06em; color: var(--pom); }
+.script-note { font-size: var(--step--1); color: var(--muted); }
+.phrases { display: grid; gap: 12px; }
+.phrase { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; padding: 16px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; transition: transform .25s, border-color .25s; }
+.phrase:hover { transform: translateX(6px); border-color: var(--pom); }
+.phrase .ug { font-family: "Noto Naskh Arabic", "Geeza Pro", "Al Bayan", serif; font-size: 1.5rem; direction: rtl; grid-column: 2; grid-row: 1 / span 3; text-align: right; color: var(--lapis); }
+.phrase b { font-size: var(--step-1); }
+.phrase span { font-size: var(--step--1); color: var(--muted); }
+.stack { display: grid; gap: 24px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips span { font-size: var(--step--1); padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--card); }
+
+/* ---------- visit ---------- */
+.tips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.tip { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 3px solid var(--fg); }
+.tip h3 { font-size: var(--step-1); }
+.tip p { color: var(--muted); font-size: .95rem; }
+.tip .k { font-family: var(--f-display); font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--pom); line-height: 1.2; }
+
+/* ---------- making ---------- */
+.making { background: var(--night); color: var(--night-fg); overflow: hidden; }
+.making .head p { color: var(--night-muted); }
+.making .eyebrow { color: var(--saffron); }
+.making a { color: var(--saffron); }
+.steps-wrap { position: relative; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; counter-reset: step; position: relative; }
+.steps-line { position: absolute; left: 21px; top: 36px; bottom: 36px; width: 2px; background: var(--night-line); }
+.steps-line i { position: absolute; inset: 0; background: linear-gradient(var(--saffron), #ff5d7a); transform-origin: top; transform: scaleY(1); }
+.step { position: relative; display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1fr); gap: 8px 32px; padding-block: 30px; counter-increment: step; }
+.step::before { content: counter(step, decimal-leading-zero); position: relative; z-index: 1; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--night); border: 2px solid var(--saffron); font-family: var(--f-mono); color: var(--saffron); font-size: var(--step--1); }
+.step h3 { font-size: var(--step-1); line-height: 1.5; }
+.step .tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.step .tools a, .step .tools span { font-family: var(--f-mono); font-size: 12px; padding: 3px 9px; border-radius: 6px; border: 1px solid rgba(230,238,251,.25); text-decoration: none; color: var(--night-fg); }
+.step .tools a:hover { border-color: var(--saffron); color: var(--saffron); }
+.step .story { color: var(--night-muted); font-size: .95rem; display: grid; gap: 10px; }
+.step .story q { display: block; quotes: none; padding-left: 14px; border-left: 2px solid var(--saffron); color: var(--night-fg); }
+.step code { font-family: var(--f-mono); font-size: .88em; color: var(--night-fg); }
+.far kbd { background: var(--night-2); color: var(--night-fg); border-color: rgba(230,238,251,.25); }
+.making kbd { background: var(--night-2); color: var(--night-fg); border-color: rgba(230,238,251,.25); }
+.stack-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 40px; font-family: var(--f-mono); font-size: var(--step--1); color: var(--night-muted); }
+
+/* ---------- credits ---------- */
+footer { padding-block: 56px 72px; font-size: var(--step--1); color: var(--muted); }
+footer h2 { font-size: var(--step-0); color: var(--fg); margin-bottom: 12px; }
+.credit-list { columns: 2 320px; column-gap: 32px; margin: 0 0 16px; padding: 0; list-style: none; }
+.credit-list li { break-inside: avoid; padding: 4px 0; line-height: 1.6; }
+.keys { margin-top: 28px; }
+kbd { font-family: var(--f-mono); font-size: 12px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; background: var(--card); color: var(--fg); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+  .map-grid, .culture-grid, .globe-grid { grid-template-columns: minmax(0, 1fr); }
+  .globe-stage { max-width: 560px; width: 100%; justify-self: center; }
+  .city-intro, .city-photo, .sea-card { grid-column: 1 / -1; }
+  .city-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .insts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sunrow { grid-template-columns: minmax(0, 1fr) 90px; }
+  .sunrow .sunbar { grid-column: 1 / -1; grid-row: 2; }
+  .sunrow .len { grid-row: 1; grid-column: 2; }
+  .fly-mini { width: 130px; }
+  .step { grid-template-columns: 56px minmax(0, 1fr); }
+  .step .story { grid-column: 2; }
+  .tips { grid-template-columns: minmax(0, 1fr); }
+  .ticks { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .clocks, .city-row, .insts { grid-template-columns: minmax(0, 1fr); }
+  .fly-mini, .fly-note { display: none; }
+  .fly-top { top: 64px; }
+  .fcard img { aspect-ratio: 21 / 9; }
+  .fcard .body { padding: 12px 16px 14px; }
+  .fcard p { font-size: .85rem; line-height: 1.6; }
+  .fly-cards { bottom: 76px; }
+  .music-banner { aspect-ratio: 4 / 3; }
+  .brand { display: none; }
+  .culture-grid .ph { aspect-ratio: 4 / 3; }
+  .panel { width: 86vw; height: 70vh; }
+  .panel--end { width: 70vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ikat, .scroll-cue i, .pulse { animation: none; }
+}
+</style>
+
+<header class="topbar" id="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top">ウルムチから来ました</a>
+    <nav class="toc" aria-label="章">
+      <a href="#where">どこ？</a>
+      <a href="#far">距離</a>
+      <a href="#city">ウルムチ</a>
+      <a href="#time">時差</a>
+      <a href="#food">ごはん</a>
+      <a href="#nature">自然</a>
+      <a href="#culture">ことば・文化</a>
+      <a href="#visit">行くなら</a>
+      <a href="#making">作り方</a>
+    </nav>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <img class="hero__img" src="images/hero-bogda-urumqi.jpg" alt="雪をかぶったボゴダ峰の山並みと、そのふもとに広がるウルムチ市街の空撮" fetchpriority="high">
+    <canvas id="snow" aria-hidden="true"></canvas>
+    <div class="wrap hero__body">
+      <p class="eyebrow hero-in">Knowledge Share · 2026.11.20</p>
+      <h1 id="title">ウルムチから<br>来ました</h1>
+      <p class="hero__sub hero-in" style="--d:1">海から一番遠い街と、日本の4倍以上ある「新疆」のはなし。</p>
+      <div class="names hero-in" style="--d:2">
+        <span>乌鲁木齐</span>
+        <span class="ug" lang="ug">ئۈرۈمچى</span>
+        <span>Ürümqi</span>
+      </div>
+      <p class="hero__meta hero-in" style="--d:3">43°49′N 87°37′E ・ 標高 約800m ・ 天山山脈の北のふもと</p>
+    </div>
+    <div class="scroll-cue" aria-hidden="true">SCROLL<i></i></div>
+    <span class="photo-credit">Photo: Windmemories / CC BY-SA 4.0</span>
+  </section>
+  <div class="ikat" aria-hidden="true"></div>
+
+  <!-- WHERE -->
+  <section class="chapter night" id="where">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">01 · どこ？</p>
+        <h2>新疆は、日本が4つ入るくらい広い</h2>
+        <p>中国の一番西にある「新疆ウイグル自治区」。中国の省・自治区のなかで一番大きく、8つの国と国境を接しています。赤い日本はドラッグで動かせます。</p>
+      </div>
+      <div class="map-grid">
+        <div class="map-card">
+          <svg class="map-svg" id="map" viewBox="0 0 1000 640" role="img" aria-label="新疆ウイグル自治区の輪郭に、同じ縮尺の日本列島を重ねた地図。シルクロードのルートも表示">
+            <defs>
+              <linearGradient id="xjGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#1f4f9e" stop-opacity=".55"></stop>
+                <stop offset="1" stop-color="#0e2a5c" stop-opacity=".35"></stop>
+              </linearGradient>
+              <filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5"></feGaussianBlur></filter>
+            </defs>
+          </svg>
+          <div class="map-bar">
+            <span>同じ縮尺（正積図法）で表示しています</span>
+            <div class="btns">
+              <button class="btn" id="nbbtn" type="button">国境の8カ国</button>
+              <button class="btn btn--primary" id="overlay" type="button">日本を重ねる</button>
+              <button class="btn" id="reset" type="button">元に戻す</button>
+            </div>
+          </div>
+        </div>
+        <dl class="facts">
+          <div class="fact"><dt>面積</dt><dd><span data-count="166">166</span><span class="unit">万km²</span><small>日本の約4.4倍</small></dd></div>
+          <div class="fact fact--btn" id="nbfact" role="button" tabindex="0" title="地図で8カ国を表示"><dt>国境を接する国（押すと地図に表示）</dt><dd><span data-count="8">8</span><span class="unit">カ国</span><small>モンゴル、ロシア、カザフスタン、キルギス、タジキスタン、アフガニスタン、パキスタン、インド</small></dd></div>
+          <div class="fact"><dt>人口（2020年）</dt><dd>約<span data-count="2585">2,585</span><span class="unit">万人</span></dd></div>
+          <div class="fact"><dt>東京 → ウルムチ（直線距離）</dt><dd>約<span data-count="4470">4,470</span><span class="unit">km</span></dd></div>
+          <div class="fact"><dt>北京 → ウルムチ</dt><dd>約<span data-count="2410">2,410</span><span class="unit">km</span><small>飛行機で4時間ほど</small></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAR: globe -->
+  <section class="chapter far" id="far">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">02 · どれくらい遠い？</p>
+        <h2>東京からウルムチまで、地球の上を飛んでみる</h2>
+        <p>直行便は基本的にないので、北京で乗り継ぐのが定番です。地球はドラッグで回せます。暗い部分は、その時刻に夜になっている地域です。</p>
+      </div>
+      <div class="globe-grid">
+        <div class="globe-stage">
+          <canvas id="globe-cv" tabindex="0" role="img" aria-label="地球儀。東京からウルムチまでの飛行ルートを表示しています。ドラッグや矢印キーで回せます"></canvas>
+          <p class="g-phase" id="g-phase" aria-live="polite">羽田を出発</p>
+          <p class="g-hint">ドラッグで回転 · <kbd>Space</kbd> で再生</p>
+        </div>
+        <div class="hud">
+          <div class="seg" role="group" aria-label="ルートを選ぶ">
+            <button type="button" data-mode="real" aria-pressed="true">北京乗り継ぎ（いつもの）</button>
+            <button type="button" data-mode="direct" aria-pressed="false">もし直行便があったら</button>
+          </div>
+          <div class="hud-big">
+            <span>出発からの時間</span>
+            <b id="g-elapsed">0<small>時間</small>00<small>分</small></b>
+            <span class="hud-km">飛んだ距離<b id="g-km">0</b>km</span>
+          </div>
+          <div class="hud-clocks">
+            <div class="hud-clock"><span>日本時間</span><time id="g-jst">09:00</time></div>
+            <div class="hud-clock"><span>北京時間（中国の標準時）</span><time id="g-cst">08:00</time></div>
+          </div>
+          <ol class="legs" id="g-legs"></ol>
+          <div class="g-controls">
+            <button class="btn btn--primary" id="g-play" type="button">▶ 出発する</button>
+            <input type="range" id="g-scrub" min="0" max="1000" value="0" aria-label="出発からの時間">
+          </div>
+          <p class="g-note" id="g-note"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CITY -->
+  <section class="chapter chapter--alt" id="city">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">03 · ウルムチ</p>
+        <h2>世界で一番、海から遠い大都市</h2>
+      </div>
+      <div class="city-grid">
+        <div class="city-intro">
+          <div class="big-number"><span data-count="2350">2,350</span><span class="unit">km</span></div>
+          <p class="lede">一番近い海（インド洋のベンガル湾）まで約2,350km。「世界で最も海から遠い大都市」としてギネス世界記録にも載っています。</p>
+          <p>右の地図の赤い点線は、ウルムチから一番近い海までの距離で描いた円です。<b>この円の中に、海はひとつもありません。</b>日本はどこにいても海から約115km以内（一番遠いのは長野県佐久市）なので、20倍以上の遠さです。</p>
+          <p>ユーラシア大陸で海から一番遠い地点（到達不能極）も、ウルムチの北約280kmにあります。地図の黄色い星がその場所です。</p>
+          <p style="font-size:var(--step--1);color:var(--muted)">※ ギネスの記録では約2,500km。海岸線をどこまで細かく測るかで数字が変わります。</p>
+          <p class="callout">名前の由来はモンゴル語で<b>「美しい牧場」</b>。人口は約405万人（2020年）で、高層ビルの向こうに雪山が見える街です。</p>
+        </div>
+        <div class="sea-card">
+          <svg class="sea-svg" id="sea" viewBox="0 0 640 640" role="img" aria-label="ウルムチを中心にした地図。一番近い海（ベンガル湾）まで約2,350kmで、その距離の円の中に海がないことを示す"></svg>
+          <div class="sea-legend"><span><i></i>一番近い海までの距離の円</span><span>点線の輪は1,000kmごと</span><span>距離が正しく出る正距方位図法</span></div>
+        </div>
+        <div class="city-row">
+          <figure>
+            <div class="ph" style="aspect-ratio: 4 / 3;"><img src="images/skyline.jpg" alt="紅山公園から見たウルムチの高層ビル群と青空" loading="lazy"></div>
+            <figcaption><b>紅山公園から見た市街地</b><span>想像より都会、とよく言われます。夏は空気が乾いていて空が青い。</span></figcaption>
+          </figure>
+          <figure>
+            <div class="ph" style="aspect-ratio: 4 / 3;"><img src="images/bazaar.jpg" alt="イスラム建築風の新疆国際大バザール" loading="lazy"></div>
+            <figcaption><b>国際大バザール</b><span>ドライフルーツ、ナッツ、絨毯、楽器。観光客はまずここへ。</span></figcaption>
+          </figure>
+          <figure>
+            <div class="ph" style="aspect-ratio: 4 / 3;"><img src="images/night-market.jpg" alt="夕方の頭道橋のグルメ通り。屋台と人でにぎわう" loading="lazy"></div>
+            <figcaption><b>夜市・グルメ通り</b><span>夕方から深夜まで、羊肉串の煙とにぎわいが続きます。</span></figcaption>
+          </figure>
+          <figure>
+            <div class="ph" style="aspect-ratio: 4 / 3;"><img src="images/hongshan.jpg" alt="紅山の上に建つ紅山塔" loading="lazy"></div>
+            <figcaption><b>紅山（ホンシャン）</b><span>街のシンボル。赤い岩山の上の塔から市内を一望できます。</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__row outline" data-dir="-1"><span>ÜRÜMQI</span><span class="ug">ئۈرۈمچى</span><span>乌鲁木齐</span><span>ウルムチ</span><span>ÜRÜMQI</span><span class="ug">ئۈرۈمچى</span><span>乌鲁木齐</span><span>ウルムチ</span></div>
+    <div class="marquee__row fill" data-dir="1"><span>ウルムチ</span><span>乌鲁木齐</span><span class="ug">ئۈرۈمچى</span><span>ÜRÜMQI</span><span>ウルムチ</span><span>乌鲁木齐</span><span class="ug">ئۈرۈمچى</span><span>ÜRÜMQI</span></div>
+  </div>
+
+  <!-- TIME -->
+  <section class="chapter" id="time">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">04 · 時差</p>
+        <h2>同じ街に、時計が2つある</h2>
+        <p>中国の公式な時間は全国共通の「北京時間」。でも新疆は北京から2,400kmも西にあるので、太陽の動きと2時間ずれます。そのため地元では「新疆時間」も使われていて、待ち合わせのときは「どっちの時間？」と確認します。</p>
+      </div>
+      <div class="clocks">
+        <div class="clock"><div class="city"><span>東京</span><span class="mono">UTC+9</span></div><time id="clk-tokyo">--:--:--</time><span class="note">日本時間</span></div>
+        <div class="clock"><div class="city"><span>ウルムチ（北京時間）</span><span class="mono">UTC+8</span></div><time id="clk-beijing">--:--:--</time><span class="note">駅、空港、役所はこちら</span></div>
+        <div class="clock hl"><div class="city"><span>ウルムチ（新疆時間）</span><span class="mono">UTC+6</span></div><time id="clk-xj">--:--:--</time><span class="note">体感はこちら。日本との時差は3時間</span></div>
+      </div>
+      <div class="sun" id="sun">
+        <h3>今日の日の出・日の入り：世界の両極端と比べる</h3>
+        <p class="sun-note">昼が長い順に並べています。バーは各地の現地時間で、赤い線が「いま」。今日の日付から毎日自動で計算しています。</p>
+        <div class="sun-rows" id="sun-rows"></div>
+        <div class="sunrow"><div class="ticks"><span>0時</span><span style="left:25%">6時</span><span style="left:50%">12時</span><span style="left:75%">18時</span><span style="left:100%">24時</span></div></div>
+      </div>
+      <div class="day-wrap">
+        <table class="day">
+          <thead><tr><th>ウルムチの1日（目安）</th><th>北京時間</th><th>新疆時間</th><th>日本時間</th></tr></thead>
+          <tbody>
+            <tr><td>仕事・学校が始まる</td><td class="t">10:00</td><td class="t xj">8:00</td><td class="t">11:00</td></tr>
+            <tr><td>お昼ごはん</td><td class="t">14:00</td><td class="t xj">12:00</td><td class="t">15:00</td></tr>
+            <tr><td>晩ごはん</td><td class="t">20:30</td><td class="t xj">18:30</td><td class="t">21:30</td></tr>
+            <tr><td>夏至の日没</td><td class="t">21:50</td><td class="t xj">19:50</td><td class="t">22:50</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOD -->
+  <section class="chapter chapter--alt" id="food">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">05 · ごはん</p>
+        <h2>羊と小麦と、甘い果物</h2>
+        <p>主役は羊肉と小麦。乾燥した気候と昼夜の寒暖差のおかげで、果物がとにかく甘いです。</p>
+      </div>
+      <div class="track" tabindex="0" aria-label="新疆料理（横にスクロール）">
+        <article class="dish">
+          <div class="ph"><img src="images/laghman.jpg" alt="手延べ麺と、羊肉と唐辛子の炒め具が別々の皿で出てきたラグメン" loading="lazy"></div>
+          <h3>ラグメン <small>拌面 / Leghmen</small></h3>
+          <p>手で延ばしたコシの強い麺に、羊肉と野菜の炒め具をかけて混ぜて食べます。ウルムチっ子のソウルフード。</p>
+        </article>
+        <article class="dish">
+          <div class="ph"><img src="images/polo.jpg" alt="にんじんと羊肉の炊き込みご飯ポロ" loading="lazy"></div>
+          <h3>ポロ <small>抓饭 / Polo</small></h3>
+          <p>羊肉、にんじん、玉ねぎを炊き込んだピラフ。お祝いの席の主役です。写真は東京・豊島区のお店のもの。</p>
+        </article>
+        <article class="dish">
+          <div class="ph"><img src="images/dapanji.jpg" alt="鶏肉とじゃがいもを煮込んだ大皿料理、大盤鶏" loading="lazy"></div>
+          <h3>大盤鶏 <small>大盘鸡 / Dapanji</small></h3>
+          <p>鶏とじゃがいもをピリ辛に煮込んだ大皿料理。最後に幅広の麺をタレに絡めて食べるのがお約束。</p>
+        </article>
+        <article class="dish">
+          <div class="ph"><img src="images/kebab.jpg" alt="大きな羊肉の串焼き" loading="lazy"></div>
+          <h3>カワプ <small>羊肉串 / Kawap</small></h3>
+          <p>炭火で焼く羊の串焼き。味付けはクミンと唐辛子と塩だけ。夜市の煙の正体はこれです。</p>
+        </article>
+        <article class="dish">
+          <div class="ph"><img src="images/nan.jpg" alt="模様のついた丸いナン" loading="lazy"></div>
+          <h3>ナン <small>馕 / Nan</small></h3>
+          <p>土窯で焼く丸くて平たいパン。インドのナンとは別物で、日持ちするので旅の携帯食にもなります。</p>
+        </article>
+        <article class="dish">
+          <div class="ph"><img src="images/grapes.jpg" alt="トルファンの市場に並ぶブドウ" loading="lazy"></div>
+          <h3>ブドウとハミ瓜 <small>吐鲁番葡萄 / 哈密瓜</small></h3>
+          <p>トルファンのブドウとハミのメロンは中国中で有名。8〜9月は果物が一番おいしい季節です。</p>
+        </article>
+      </div>
+      <p class="hint">横にスクロールできます →</p>
+    </div>
+  </section>
+
+  <!-- NATURE -->
+  <section class="chapter nature" id="nature">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">06 · 自然</p>
+        <h2>雪山、湖、草原、砂漠が全部ある</h2>
+        <p>天山山脈が新疆を南北に分けていて、北は草原と湖、南は砂漠とオアシスの世界です。本物の標高データと衛星写真で作った3Dの新疆を、北のアルタイ山脈から南のパミール高原まで、季節の名所を巡りながら飛びます。<b>スクロールで進みます。</b></p>
+      </div>
+    </div>
+    <div class="fly" id="fly">
+      <canvas id="fly-cv" role="img" aria-label="新疆の3D地形。スクロールすると北から南へ、季節の名所を順に巡ります"></canvas>
+      <div class="fly-pins" id="fly-pins"></div>
+      <div class="fly-top">
+        <button class="fly-count start" id="fly-count" type="button">▶ START</button>
+        <span class="season" id="fly-season">新疆の全体</span>
+        <span class="fly-elev" id="fly-elev" hidden></span>
+      </div>
+      <svg class="fly-mini" id="fly-mini" viewBox="0 0 160 120" aria-hidden="true"></svg>
+      <div class="fly-cards" id="fly-cards" aria-live="polite"></div>
+      <p class="fly-note">地形は実際の標高データ（高さは3.5倍に強調）。<br>雪や紅葉の色は季節を表す演出です。</p>
+      <div class="fly-nav">
+        <button class="btn" type="button" id="fly-prev" aria-label="前の場所へ">←</button>
+        <button class="btn" type="button" id="fly-next" aria-label="次の場所へ">次へ →</button>
+      </div>
+    </div>
+    <div class="nature-tail"></div>
+  </section>
+
+  <!-- CULTURE -->
+  <section class="chapter chapter--alt" id="culture">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">07 · ことば・文化</p>
+        <h2>いろんな民族が一緒に暮らす街</h2>
+        <p>ウルムチにはウイグル族、漢族、カザフ族、回族など、いろいろな民族が暮らしています。街の看板はウイグル語と中国語の2つの文字で書かれています。</p>
+      </div>
+      <div class="music">
+        <div class="music-banner">
+          <img src="images/instrument-shop.jpg" alt="カシュガルの楽器店。ドゥタールやラワープなどの弦楽器と太鼓が壁一面に下がっている" loading="lazy">
+          <div class="cap">
+            <p class="eyebrow" style="color:#ffd48a">音楽</p>
+            <h3>歌と踊りなしでは、何も始まらない</h3>
+            <p>ウイグルの古典音楽「<a href="https://ich.unesco.org/en/RL/uyghur-muqam-of-xinjiang-00109" target="_blank" rel="noopener">ムカーム</a>」と、歌と踊りの集まり「<a href="https://ich.unesco.org/en/USL/meshrep-00304" target="_blank" rel="noopener">メシュレプ</a>」は、どちらもユネスコの無形文化遺産です。写真はカシュガルの楽器店。カードの下には「日本でいうと、これに近い」楽器を並べました。</p>
+          </div>
+        </div>
+        <div class="insts">
+          <article class="inst">
+            <div class="ph"><img src="images/dutar.jpg" alt="壁に飾られた弦楽器ドゥタール" loading="lazy"></div>
+            <div class="body">
+              <div class="nm"><b>ドゥタール</b><span class="ug" lang="ug">دۇتار</span></div>
+              <span class="lat">Dutar</span>
+              <p>2本の弦をもつ長い棹の弦楽器。「ドゥ」はペルシャ語で「2」。歌の伴奏に一番よく使われます。</p>
+              <div class="jp"><img src="images/jp-sanshin.jpg" alt="沖縄の三線" loading="lazy"><span class="lab">日本でいうと</span><b>三線（さんしん）</b><p class="why">長い棹で、素朴でやわらかい音。歌の伴奏が得意なところもそっくりです。</p></div>
+              <a class="listen" href="https://www.youtube.com/results?search_query=Uyghur+dutar" target="_blank" rel="noopener">▶ 演奏を聴く（YouTube）</a>
+            </div>
+          </article>
+          <article class="inst">
+            <div class="ph"><img src="images/inst-rawap.jpg" alt="布の上に置かれた弦楽器ラワープ。丸い胴に皮が張られ、棹の付け根に角のような飾りがある" loading="lazy"></div>
+            <div class="body">
+              <div class="nm"><b>ラワープ</b><span class="ug" lang="ug">راۋاپ</span></div>
+              <span class="lat">Rawap</span>
+              <p>胴に羊の皮を張った弦楽器。棹の付け根に角のような飾りがあり、明るく歯切れのよい音がします。</p>
+              <div class="jp"><img src="images/jp-shamisen.jpg" alt="三味線" loading="lazy"><span class="lab">日本でいうと</span><b>三味線</b><p class="why">胴に皮を張り、ピック（撥）ではじいて鳴らす。キレのある音が似ています。</p></div>
+              <a class="listen" href="https://www.youtube.com/results?search_query=Uyghur+rawap" target="_blank" rel="noopener">▶ 演奏を聴く（YouTube）</a>
+            </div>
+          </article>
+          <article class="inst">
+            <div class="ph"><img src="images/inst-tembur.jpg" alt="博物館の壁に展示された、とても長い棹の弦楽器タンブール" loading="lazy"></div>
+            <div class="body">
+              <div class="nm"><b>タンブール</b><span class="ug" lang="ug">تەمبۇر</span></div>
+              <span class="lat">Tembur</span>
+              <p>5本の弦をもつ、背の高い弦楽器。金属のピックで弾き、古典音楽ムカームの旋律を担当します。</p>
+              <div class="jp"><img src="images/jp-biwa.jpg" alt="琵琶" loading="lazy"><span class="lab">日本でいうと</span><b>琵琶（びわ）</b><p class="why">フレットがあり、ピックで旋律を弾く。古典音楽の主役という立ち位置も同じです。</p></div>
+              <a class="listen" href="https://www.youtube.com/results?search_query=Uyghur+tembur" target="_blank" rel="noopener">▶ 演奏を聴く（YouTube）</a>
+            </div>
+          </article>
+          <article class="inst">
+            <div class="ph"><img src="images/ghijek.jpg" alt="博物館に展示された弓奏楽器ギジェク" loading="lazy"></div>
+            <div class="body">
+              <div class="nm"><b>ギジェク</b><span class="ug" lang="ug">غىجەك</span></div>
+              <span class="lat">Ghijek</span>
+              <p>弓でこすって鳴らす楽器。人の声のように歌う音色で、ゆっくりした曲によく合います。</p>
+              <div class="jp"><img src="images/jp-kokyu.jpg" alt="胡弓" loading="lazy"><span class="lab">日本でいうと</span><b>胡弓（こきゅう）</b><p class="why">弓でこすって鳴らす、日本では数少ない擦弦楽器。泣くような音色が似ています。</p></div>
+              <a class="listen" href="https://www.youtube.com/results?search_query=Uyghur+ghijek" target="_blank" rel="noopener">▶ 演奏を聴く（YouTube）</a>
+            </div>
+          </article>
+          <article class="inst">
+            <div class="ph"><img src="images/inst-dap.jpg" alt="内側に金属の輪がたくさん付いた枠太鼓（写真は同じ形のウズベクの太鼓）" loading="lazy"></div>
+            <div class="body">
+              <div class="nm"><b>ダップ</b><span class="ug" lang="ug">داپ</span></div>
+              <span class="lat">Dap</span>
+              <p>内側に金属の輪がついた大きな枠太鼓。踊りのリズムを刻みます。写真は同じ形のウズベクの太鼓です。</p>
+              <div class="jp"><img src="images/jp-uchiwa.jpg" alt="うちわ太鼓" loading="lazy"><span class="lab">日本でいうと</span><b>うちわ太鼓</b><p class="why">枠に皮を一枚張っただけの、手に持って打つ太鼓。ダップは輪がシャンシャン鳴ります。</p></div>
+              <a class="listen" href="https://www.youtube.com/results?search_query=Uyghur+dap+drum" target="_blank" rel="noopener">▶ 演奏を聴く（YouTube）</a>
+            </div>
+          </article>
+          <article class="inst">
+            <div class="ph"><img src="images/inst-sunay.jpg" alt="金属のラッパ口がついた木の管楽器（スナイと同じ仲間のスオナー）" loading="lazy"></div>
+            <div class="body">
+              <div class="nm"><b>スナイ</b><span class="ug" lang="ug">سۇناي</span></div>
+              <span class="lat">Sunay</span>
+              <p>ダブルリードの管楽器で、とても大きな音が出ます。結婚式やお祭りの始まりの合図に欠かせません。写真は同じ仲間のスオナーです。</p>
+              <div class="jp"><img src="images/jp-charumera.jpg" alt="チャルメラ（スオナー）" loading="lazy"><span class="lab">日本でいうと</span><b>チャルメラ</b><p class="why">ラーメン屋台の「チャラリ〜ラ〜」のあの楽器と同じ仲間です。</p></div>
+              <a class="listen" href="https://www.youtube.com/results?search_query=Uyghur+sunay" target="_blank" rel="noopener">▶ 演奏を聴く（YouTube）</a>
+            </div>
+          </article>
+        </div>
+      </div>
+      <div class="culture-grid">
+        <div class="phrases">
+          <p class="eyebrow">今日使えるウイグル語</p>
+          <div class="phrase"><span class="ug" lang="ug">ياخشىمۇسىز</span><span class="lat" lang="ug-Latn">Yaxshimusiz</span><b>ヤフシムスィズ</b><span>こんにちは</span></div>
+          <div class="phrase"><span class="ug" lang="ug">رەھمەت</span><span class="lat" lang="ug-Latn">Rehmet</span><b>ラフメット</b><span>ありがとう</span></div>
+          <div class="phrase"><span class="ug" lang="ug">ياخشى</span><span class="lat" lang="ug-Latn">Yaxshi</span><b>ヤフシ</b><span>いいね、よい</span></div>
+          <div class="phrase"><span class="ug" lang="ug">خوش</span><span class="lat" lang="ug-Latn">Xosh</span><b>ホシュ</b><span>さようなら</span></div>
+          <div class="phrase"><span class="ug" lang="ug">مەن ياپونلۇق</span><span class="lat" lang="ug-Latn">Men yaponluq</span><b>メン ヤポンルク</b><span>私は日本人です</span></div>
+          <p class="script-note">右がアラビア文字、左は上からラテン文字（ローマ字）、カタカナ読み、意味です。</p>
+        </div>
+        <div class="stack">
+          <div>
+            <p class="eyebrow" style="margin-bottom:10px">ウイグル語のこと</p>
+            <p>正式な文字はアラビア文字で、右から左に書きます。パソコンやスマホ用にラテン文字（ローマ字）の書き方もあり、例えば「ありがとう」は <span lang="ug" style="font-family:'Noto Naskh Arabic','Geeza Pro',serif;font-size:1.2em">رەھمەت</span> ＝ <b>Rehmet</b> です。言葉としてはトルコ語やウズベク語の仲間で、語順は日本語と同じ「主語・目的語・動詞」なので、日本人には意外と覚えやすい言語です。</p>
+          </div>
+          <div class="chips" aria-label="ウルムチに暮らす主な民族">
+            <span>ウイグル族</span><span>漢族</span><span>カザフ族</span><span>回族</span><span>キルギス族</span><span>モンゴル族</span><span>ウズベク族</span><span>タタール族</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VISIT -->
+  <section class="chapter" id="visit">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">08 · 行くなら</p>
+        <h2>地元民からのアドバイス</h2>
+      </div>
+      <div class="tips">
+        <div class="tip"><span class="k">6〜9月</span><h3>ベストシーズン</h3><p>草原が緑で、8〜9月は果物の季節。冬は−20℃を下回る日もありますが、天山でスキーができます。</p></div>
+        <div class="tip"><span class="k">乗り継ぎ1回</span><h3>行き方</h3><p>日本からの直行便は基本的になく、北京や上海、西安などで国内線に乗り継ぎます。北京から約4時間です。</p></div>
+        <div class="tip"><span class="k">移動は飛行機</span><h3>スケール感に注意</h3><p>新疆の中を移動するのも、国内線や長距離列車が基本です。1日に2カ所回るのは、ほぼ無理だと思ってください。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ikat" aria-hidden="true"></div>
+
+  <!-- MAKING -->
+  <section class="chapter making" id="making">
+    <div class="wrap">
+      <div class="head">
+        <p class="eyebrow">09 · このページの作り方</p>
+        <h2>GitHubで見つけたもので作りました</h2>
+        <p>このページはスライドではなく、HTML 1枚です。Claude Codeと相談しながら、オープンソースのライブラリと公開データを組み合わせて作りました。途中であったことも含めて紹介します。</p>
+      </div>
+      <div class="steps-wrap">
+      <div class="steps-line" aria-hidden="true"><i id="steps-fill"></i></div>
+      <ol class="steps">
+        <li class="step">
+          <div><h3>スライドではなく「スクロールで読む地図と写真」にした</h3>
+            <div class="tools"><span>HTML</span><span>CSS</span><span>Claude Code</span></div></div>
+          <div class="story"><p>話すときは画面を見せ、終わったあとはURLを配るだけで資料として残せる形にしたかったので、1枚のHTMLにしました。発表中は<kbd>→</kbd><kbd>←</kbd>キーで章を移動できます。</p></div>
+        </li>
+        <li class="step">
+          <div><h3>写真はWikimedia CommonsのAPIで集めた</h3>
+            <div class="tools"><a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a><a href="https://www.mediawiki.org/wiki/API:Imageinfo" target="_blank" rel="noopener">MediaWiki API</a></div></div>
+          <div class="story">
+            <p>自分の写真がなかったので、自由に使える写真をAPIで検索しました。撮影者とライセンスも一緒に取得して、ページ下のクレジットはそのデータから作っています。</p>
+            <q>途中から「429 Too Many Requests」で弾かれるようになりました。エラーページをよく読むと「元画像ではなく、決められたサイズのサムネイルを使ってください」と書いてあったので、1280px幅のサムネイルに変えたら全部取れました。エラーメッセージはちゃんと読むものですね。</q>
+          </div>
+        </li>
+        <li class="step">
+          <div><h3>地図の形はGitHubの公開データから</h3>
+            <div class="tools"><a href="https://github.com/dataofjapan/land" target="_blank" rel="noopener">dataofjapan/land</a><a href="https://datav.aliyun.com/portal/school/atlas/area_selector" target="_blank" rel="noopener">DataV.GeoAtlas</a></div></div>
+          <div class="story">
+            <p>日本の形はGitHubの <code>dataofjapan/land</code>、新疆の形はDataV.GeoAtlasのGeoJSONを使いました。</p>
+            <q>日本のデータは13MBもあったので、Douglas–Peucker法で点を間引いて約50KBにしました。最初は輪郭が「点2つ」になるバグが出ました。始点と終点が同じ「閉じた線」をそのまま処理していたのが原因です。</q>
+          </div>
+        </li>
+        <li class="step">
+          <div><h3>「本当の大きさ」で重ねるためにd3-geoを使った</h3>
+            <div class="tools"><a href="https://github.com/d3/d3-geo" target="_blank" rel="noopener">d3/d3-geo</a><a href="https://www.thetruesize.com/" target="_blank" rel="noopener">The True Size Of</a></div></div>
+          <div class="story">
+            <p>よく見るメルカトル図法の地図は、北にある国ほど大きく見えます。そこで面積が正しく出る「正積方位図法」で、日本と新疆をそれぞれの中心から同じ縮尺で描いて重ねました。</p>
+            <q>アイデアの元は、国を地図上で動かして本当の大きさを比べられる「The True Size Of」というサイトです。</q>
+          </div>
+        </li>
+        <li class="step">
+          <div><h3>動きはGSAPとCanvasで「映画っぽく」</h3>
+            <div class="tools"><a href="https://github.com/greensock/GSAP" target="_blank" rel="noopener">greensock/GSAP</a><span>ScrollTrigger</span><span>Canvas</span></div></div>
+          <div class="story">
+            <p>雪はCanvasで描いた粒、タイトルは1文字ずつ浮かび上がり、地図は輪郭が光りながら描かれます。自然の章は、縦にスクロールすると写真が横に流れる「ピン留め」演出です。</p>
+            <q>最初の版は「ちゃんとしてるけど地味」だったので、「もっとファンシーに」と頼んで作り直しました。動きを減らす設定（prefers-reduced-motion）の人には、演出を止めて静止画で見せています。</q>
+          </div>
+        </li>
+        <li class="step">
+          <div><h3>地球儀は、発表前日に思いついて足した</h3>
+            <div class="tools"><a href="https://github.com/topojson/world-atlas" target="_blank" rel="noopener">topojson/world-atlas</a><span>d3.geoOrthographic</span><span>Canvas</span></div></div>
+          <div class="story">
+            <p>「東京からウルムチまでの時間を、地球の上で見せたい」と思って追加しました。世界の陸地はGitHubの <code>world-atlas</code>（Natural Earthのデータ）を使い、d3の正射図法で地球儀にしています。夜の影は、その時刻の太陽の位置を計算して描いています。</p>
+            <q>d3に「2点を結ぶ線」を渡すと、自動で地球上の最短ルート（大圏コース）に曲げてくれます。線を引いてみたら、北京は東京とウルムチを結ぶ最短ルートのほぼ真上にあって、北京経由でも遠回りは約30kmしかありませんでした。作ってみて初めて気づいたことです。</q>
+          </div>
+        </li>
+        <li class="step">
+          <div><h3>新疆の3D地形は、本物の標高データと衛星写真で</h3>
+            <div class="tools"><a href="https://github.com/mrdoob/three.js" target="_blank" rel="noopener">mrdoob/three.js</a><a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">AWS Terrain Tiles</a><a href="https://earthobservatory.nasa.gov/features/BlueMarble" target="_blank" rel="noopener">NASA Blue Marble</a><span>DecompressionStream</span></div></div>
+          <div class="story">
+            <p>GitHubで話題のブラウザ3Dゲームのように、新疆の上を飛べるようにしたくて作りました。標高はAWSで公開されている標高タイル（SRTMなど）、色はNASAの衛星写真「Blue Marble」です。three.jsで地面を作り、スクロールに合わせてカメラを動かしています。雪や紅葉の色は、シェーダーで重ねた季節の演出です。</p>
+            <p>最初はスクロールの速さでカメラが一気に動き、「切り替えが速すぎる」と感じたので、行き先を決めると赤いヘリコプター（three.jsの図形を組み合わせた手作り）が数秒かけて飛んでいく方式に変えました。地図上の地名を押しても飛べます。</p>
+            <q>標高タイル90枚をつなぐのに画像ライブラリ（Pillow）を使おうとしたら、入っていませんでした。そこでPythonの標準ライブラリだけでPNGを読むコードを書き、標高を4m単位の差分にしてzlibで圧縮。ブラウザ側は標準の<code>DecompressionStream</code>で展開しているので、地形データ約37万点がライブラリなしで約500KBに収まりました。</q>
+          </div>
+        </li>
+        <li class="step">
+          <div><h3>公開はGitHub Pages</h3>
+            <div class="tools"><a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a></div></div>
+          <div class="story"><p>サーバーも、ビルドツールも、npmも使っていません。<code>index.html</code>と画像フォルダをリポジトリに置いて、Pagesをオンにするだけで公開できます。</p></div>
+        </li>
+      </ol>
+      </div>
+      <div class="stack-strip"><span>d3 7.9.0</span><span>·</span><span>GSAP 3.12.5</span><span>·</span><span>GeoJSON 約50KB</span><span>·</span><span>world-atlas 110m</span><span>·</span><span>three.js r128</span><span>·</span><span>標高 約37万点</span><span>·</span><span>写真 48枚（Wikimedia Commons）</span></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>写真クレジット</h2>
+    <p style="margin-bottom:14px">写真はすべてWikimedia Commonsから、各ライセンスに従って使用しています。</p>
+    <ul class="credit-list" id="credits"></ul>
+    <p>地図データ：DataV.GeoAtlas（新疆）、dataofjapan/land（日本）、world-atlas / Natural Earth（世界）。3D地形：標高 AWS Terrain Tiles（Mapzen / SRTM ほか）、衛星写真 NASA Blue Marble Next Generation（NASA Earth Observatory）。飛行時間と時刻は目安です。数値は2020年国勢調査ほか公開情報によるおおよその値です。</p>
+    <p class="keys"><kbd>→</kbd> 次の章　<kbd>←</kbd> 前の章</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/*GEO*/
+/*WORLD*/
+/*NEIGHBORS*/
+/*TERRAIN*/
+/*CREDITS*/
+</script>
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
+  var motion = hasGsap && !reduce;
+  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+  var NS = "http://www.w3.org/2000/svg";
+
+  /* ---------- clocks ---------- */
+  var zones = [["clk-tokyo", "Asia/Tokyo"], ["clk-beijing", "Asia/Shanghai"], ["clk-xj", "Asia/Urumqi"]];
+  var fmts = zones.map(function (z) {
+    try { return new Intl.DateTimeFormat("ja-JP", { timeZone: z[1], hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }); }
+    catch (e) { return null; }
+  });
+  function tick() {
+    var now = new Date();
+    zones.forEach(function (z, i) {
+      var el = document.getElementById(z[0]);
+      if (el && fmts[i]) el.textContent = fmts[i].format(now);
+    });
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ---------- sunrise / sunset bars ---------- */
+  function sunUTC(lat, lon, date) {
+    var start = Date.UTC(date.getUTCFullYear(), 0, 0);
+    var N = Math.floor((date.getTime() - start) / 864e5);
+    var rad = Math.PI / 180;
+    var decl = -23.44 * Math.cos(2 * Math.PI / 365 * (N + 10));
+    var B = 2 * Math.PI * (N - 81) / 364;
+    var eot = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+    var cosH = (Math.sin(-0.833 * rad) - Math.sin(lat * rad) * Math.sin(decl * rad)) / (Math.cos(lat * rad) * Math.cos(decl * rad));
+    var H = Math.acos(Math.max(-1, Math.min(1, cosH))) / rad;
+    var noon = 12 - lon / 15 - eot / 60;
+    return { rise: noon - H / 15, set: noon + H / 15 };
+  }
+  function hm(h) { h = (h + 24) % 24; var m = Math.round(h * 60); return Math.floor(m / 60) + ":" + String(m % 60).padStart(2, "0"); }
+  var SUNPLACES = [
+    { n: "ウルムチ", tag: "ここの話", lat: 43.83, lon: 87.62, tz: "Asia/Shanghai", off: 8, hl: true, sub: "北京時間" },
+    { n: "東京", tag: "日本", lat: 35.68, lon: 139.69, tz: "Asia/Tokyo", off: 9, hl: true, sub: "日本時間" },
+    { n: "ロングイェールビーン", tag: "人が住む世界最北の町（ノルウェー）", lat: 78.22, lon: 15.65, tz: "Arctic/Longyearbyen", off: 1 },
+    { n: "レイキャビク", tag: "世界最北の首都（アイスランド）", lat: 64.15, lon: -21.94, tz: "Atlantic/Reykjavik", off: 0 },
+    { n: "キト", tag: "赤道直下の首都（エクアドル）", lat: -0.18, lon: -78.47, tz: "America/Guayaquil", off: -5 },
+    { n: "キリスィマスィ島", tag: "世界で一番早く「今日」が始まる（キリバス）", lat: 1.87, lon: -157.4, tz: "Pacific/Kiritimati", off: 14 },
+    { n: "ウシュアイア", tag: "世界最南の都市（アルゼンチン）", lat: -54.8, lon: -68.3, tz: "America/Argentina/Ushuaia", off: -3 },
+    { n: "昭和基地", tag: "日本の南極観測基地", lat: -69.0, lon: 39.58, tz: "Antarctica/Syowa", off: 3 }
+  ];
+  function tzOffset(tz, date, fb) {
+    try {
+      var p = {}; new Intl.DateTimeFormat("en-US", { timeZone: tz, hourCycle: "h23", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" })
+        .formatToParts(date).forEach(function (x) { p[x.type] = +x.value; });
+      return Math.round((Date.UTC(p.year, p.month - 1, p.day, p.hour % 24, p.minute) - Math.floor(date.getTime() / 6e4) * 6e4) / 9e5) / 4;
+    } catch (e) { return fb; }
+  }
+  function dur(h) { var m = Math.round(h * 60); return Math.floor(m / 60) + "時間" + String(m % 60).padStart(2, "0") + "分"; }
+  function seg(el, a, b) { var d = document.createElement("div"); d.className = "day"; d.style.left = (a / 24 * 100) + "%"; d.style.width = ((b - a) / 24 * 100) + "%"; el.appendChild(d); }
+  function lbl(el, h, text) { var l = document.createElement("span"); l.className = "lbl"; l.style.left = Math.max(5, Math.min(95, h / 24 * 100)) + "%"; l.textContent = text; el.appendChild(l); }
+  function drawSun() {
+    var box = document.getElementById("sun-rows"); if (!box) return;
+    var now = new Date();
+    var rows = SUNPLACES.map(function (c) {
+      var off = tzOffset(c.tz, now, c.off), s = sunUTC(c.lat, c.lon, now);
+      var len = Math.max(0, Math.min(24, s.set - s.rise));
+      return { c: c, off: off, rise: ((s.rise + off) % 24 + 24) % 24, len: len };
+    }).sort(function (a, b) { return b.len - a.len; });
+    box.innerHTML = "";
+    rows.forEach(function (r) {
+      var c = r.c, row = document.createElement("div"); row.className = "sunrow" + (c.hl ? " hl" : "");
+      var local = ((now.getUTCHours() + now.getUTCMinutes() / 60 + r.off) % 24 + 24) % 24;
+      var ld = new Date(now.getTime() + r.off * 36e5);
+      var who = document.createElement("div"); who.className = "who";
+      var b = document.createElement("b"); b.textContent = c.n; who.appendChild(b);
+      var t = document.createElement("span"); t.className = "tag"; t.textContent = c.tag; who.appendChild(t);
+      var lc = document.createElement("div"); lc.className = "loc";
+      lc.textContent = "いま " + (ld.getUTCMonth() + 1) + "/" + ld.getUTCDate() + " " + hm(local) + (c.sub ? "（" + c.sub + "）" : "");
+      who.appendChild(lc);
+      var bar = document.createElement("div"); bar.className = "sunbar";
+      if (r.len <= 0.01) {
+        var p0 = document.createElement("div"); p0.className = "pol night"; p0.textContent = "極夜：一日中、太陽が昇らない"; bar.appendChild(p0);
+      } else if (r.len >= 23.99) {
+        seg(bar, 0, 24);
+        var p1 = document.createElement("div"); p1.className = "pol day"; p1.textContent = "白夜：一日中、太陽が沈まない"; bar.appendChild(p1);
+      } else {
+        var a = r.rise, z = a + r.len;
+        if (z <= 24) seg(bar, a, z); else { seg(bar, a, 24); seg(bar, 0, z - 24); }
+        if (r.len > 3.5) { lbl(bar, a + 1.6, "☀ " + hm(a)); lbl(bar, (z - 1.4) % 24, hm(z)); }
+      }
+      var nw = document.createElement("div"); nw.className = "now"; nw.style.left = (local / 24 * 100) + "%"; nw.title = "いま"; bar.appendChild(nw);
+      bar.setAttribute("role", "img");
+      bar.setAttribute("aria-label", c.n + "：昼の長さ " + dur(r.len) + (r.len > 0.01 && r.len < 23.99 ? "、日の出 " + hm(r.rise) + "、日の入り " + hm(r.rise + r.len) : ""));
+      var len = document.createElement("div"); len.className = "len";
+      len.innerHTML = "昼<b>" + dur(r.len) + "</b>";
+      row.appendChild(who); row.appendChild(bar); row.appendChild(len); box.appendChild(row);
+    });
+  }
+  drawSun(); setInterval(drawSun, 60000);
+
+  /* ---------- credits ---------- */
+  var labels = {
+    "hero-bogda-urumqi": "トップ：ボゴダ峰とウルムチ", skyline: "ウルムチ市街", bazaar: "国際大バザール",
+    "night-market": "夜市・グルメ通り", hongshan: "紅山塔",
+    kanas: "カナス湖", sayram: "サイラム湖", nalati: "ナラティ草原", bayanbulak: "バインブルク草原",
+    "kanas-2": "カナス川の月亮湾", "kanas-3": "カナス湖と森", "sayram-2": "サイラム湖と花", "sayram-3": "サイラム湖と天山",
+    "nalati-2": "ナラティの空中草原", "nalati-3": "ナラティのユルト", "bayanbulak-2": "九曲十八湾の夕日", "bayanbulak-3": "開都川の蛇行",
+    tianchi: "天山天池", "tianchi-2": "天池と天山", "tianchi-3": "ボゴダ峰", flaming: "火焔山", "turpan-2": "交河故城", "turpan-3": "蘇公塔",
+    populus: "輪台の胡楊林", "tarim-2": "水面に映る胡楊", "tarim-3": "タクラマカン砂漠の砂丘", karakul: "カラクリ湖", "karakul-2": "カラクリ湖とムズタグ・アタ", "karakul-3": "ムズタグ・アタ",
+    grapes: "トルファンのブドウ", laghman: "ラグメン", polo: "ポロ", dapanji: "大盤鶏", nan: "ナン", kebab: "カワプ",
+    "instrument-shop": "カシュガルの楽器店", dutar: "ドゥタール", "inst-rawap": "ラワープ", "inst-tembur": "タンブール", ghijek: "ギジェク",
+    "inst-dap": "枠太鼓（ダップと同型）", "inst-sunay": "スオナー（スナイの仲間）", "jp-sanshin": "三線", "jp-shamisen": "三味線", "jp-biwa": "琵琶",
+    "jp-kokyu": "胡弓", "jp-uchiwa": "うちわ太鼓", "jp-charumera": "スオナー（チャルメラ）"
+  };
+  var list = document.getElementById("credits");
+  if (window.CREDITS && list) {
+    Object.keys(labels).forEach(function (k) {
+      var c = window.CREDITS[k]; if (!c) return;
+      var li = document.createElement("li");
+      var a = document.createElement("a");
+      a.href = c.source; a.target = "_blank"; a.rel = "noopener"; a.textContent = labels[k];
+      li.appendChild(a);
+      li.appendChild(document.createTextNode(" — " + (c.author || "unknown") + " / " + c.license));
+      list.appendChild(li);
+    });
+  }
+
+  /* ---------- snow (canvas) ---------- */
+  (function snow() {
+    var cv = document.getElementById("snow"); if (!cv || reduce) return;
+    var ctx = cv.getContext("2d"), flakes = [], w = 0, h = 0, dpr = 1, running = false, raf = 0;
+    function size() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = cv.clientWidth; h = cv.clientHeight; cv.width = w * dpr; cv.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var n = Math.round(Math.min(180, w * h / 9000));
+      flakes = []; for (var i = 0; i < n; i++) flakes.push(make(true));
+    }
+    function make(any) {
+      var z = Math.random();
+      return { x: Math.random() * w, y: any ? Math.random() * h : -10, r: .6 + z * 2.4, vy: .3 + z * 1.1, vx: -.2 + Math.random() * .4, p: Math.random() * 6.28, a: .35 + z * .55 };
+    }
+    function frame(t) {
+      ctx.clearRect(0, 0, w, h);
+      for (var i = 0; i < flakes.length; i++) {
+        var f = flakes[i];
+        f.y += f.vy; f.x += f.vx + Math.sin(t / 1400 + f.p) * .35;
+        if (f.y > h + 10 || f.x < -10 || f.x > w + 10) { flakes[i] = make(false); continue; }
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283);
+        ctx.fillStyle = "rgba(255,255,255," + f.a + ")"; ctx.fill();
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    size(); window.addEventListener("resize", size);
+    new IntersectionObserver(function (es) {
+      var vis = es[0].isIntersecting;
+      if (vis && !running) { running = true; raf = requestAnimationFrame(frame); }
+      else if (!vis && running) { running = false; cancelAnimationFrame(raf); }
+    }).observe(cv);
+  })();
+
+  /* ---------- map ---------- */
+  var svgEl = document.getElementById("map");
+  var jpG = null, jpPos = { x: 0, y: 0 }, START = { x: 360, y: 40 };
+  var mapParts = {};
+  function setJp(x, y) { jpPos.x = x; jpPos.y = y; if (jpG) jpG.setAttribute("transform", "translate(" + x + "," + y + ")"); }
+  function fixWinding(coords) {
+    return coords.map(function (poly) {
+      if (d3.geoArea({ type: "Polygon", coordinates: poly }) > 2 * Math.PI) return poly.map(function (r) { return r.slice().reverse(); });
+      return poly;
+    });
+  }
+  function mk(tag, attrs, parent) {
+    var el = document.createElementNS(NS, tag);
+    Object.keys(attrs).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    (parent || svgEl).appendChild(el); return el;
+  }
+
+  if (window.d3 && window.GEO && svgEl) {
+    var xj = { type: "Feature", geometry: { type: "MultiPolygon", coordinates: fixWinding(GEO.xinjiang) } };
+    var jp = { type: "Feature", geometry: { type: "MultiPolygon", coordinates: fixWinding(GEO.japan) } };
+    var projX = d3.geoAzimuthalEqualArea().rotate([-85.3, -41.4]).fitExtent([[40, 40], [620, 600]], xj);
+    var projJ = d3.geoAzimuthalEqualArea().rotate([-137.5, -36.5]).scale(projX.scale()).translate(projX.translate());
+    var pathX = d3.geoPath(projX), pathJ = d3.geoPath(projJ);
+
+    mk("path", { d: pathX(d3.geoGraticule().step([5, 5])()), class: "grat" });
+    // 国境を接する8カ国（＋中国のほかの地域）
+    mapParts.nb = [];
+    if (window.NEIGHBORS) {
+      var NB = [
+        ["Mongolia", "モンゴル", [95.6, 46.6]], ["Russia", "ロシア", [86.2, 50.3]], ["Kazakhstan", "カザフスタン", [79.0, 46.6]],
+        ["Kyrgyzstan", "キルギス", [74.6, 41.6]], ["Tajikistan", "タジキスタン", [73.2, 38.4]], ["Afghanistan", "アフガニスタン", [72.6, 37.0]],
+        ["Pakistan", "パキスタン", [74.4, 35.6]], ["India", "インド", [79.2, 34.3]]
+      ];
+      if (NEIGHBORS.China) mk("path", { d: pathX({ type: "MultiPolygon", coordinates: fixWinding(NEIGHBORS.China) }), class: "nb cn" });
+      var cnl = projX([97.5, 38.6]); var cnt = mk("text", { x: cnl[0], y: cnl[1], class: "t cn", "text-anchor": "middle" }); cnt.textContent = "中国のほかの地域";
+      cnt.setAttribute("class", "nb-l t cn");
+      NB.forEach(function (c, i) {
+        if (!NEIGHBORS[c[0]]) return;
+        var path = mk("path", { d: pathX({ type: "MultiPolygon", coordinates: fixWinding(NEIGHBORS[c[0]]) }), class: "nb" });
+        var q = projX(c[2]), x = Math.max(24, Math.min(976, q[0])), y = Math.max(22, Math.min(618, q[1]));
+        var g = mk("g", { class: "nb-l", transform: "translate(" + x + "," + y + ")" });
+        mk("circle", { r: 9 }, g);
+        var n = mk("text", { class: "n", "text-anchor": "middle", "dominant-baseline": "central" }, g); n.textContent = i + 1;
+        var t = mk("text", { class: "t", x: 14, "dominant-baseline": "central" }, g); t.textContent = c[1];
+        mapParts.nb.push({ path: path, label: g });
+      });
+    }
+    mapParts.glow = mk("path", { d: pathX(xj), class: "xj-glow" });
+    mapParts.xj = mk("path", { d: pathX(xj), class: "xj" });
+
+    [["タクラマカン砂漠", [82.8, 38.9]], ["天 山 山 脈", [79.2, 42.3]], ["ジュンガル盆地", [86.5, 45.4]]].forEach(function (a) {
+      var p = projX(a[1]); var t = mk("text", { x: p[0], y: p[1], class: "area-label", "text-anchor": "middle" }); t.textContent = a[0];
+    });
+
+    var route = [[75.99, 39.47], [80.26, 41.17], [82.96, 41.72], [86.15, 41.76], [89.19, 42.95], [93.51, 42.83]];
+    var line = d3.line().curve(d3.curveCatmullRom.alpha(.5));
+    mapParts.route = mk("path", { d: line(route.map(projX)), class: "route" });
+    var rl = projX([80.6, 40.55]);
+    var rt = mk("text", { x: rl[0], y: rl[1], class: "route-label", transform: "rotate(-14 " + rl[0] + " " + rl[1] + ")" }); rt.textContent = "SILK ROAD";
+
+    var pole = projX([86.67, 46.28]);
+    var pg = mk("g", { class: "pole", transform: "translate(" + pole[0] + "," + pole[1] + ")" });
+    mk("path", { d: d3.symbol().type(d3.symbolStar).size(260)() }, pg);
+    var pt = mk("text", { x: 12, y: 5, class: "area-label", style: "letter-spacing:0;fill:var(--night-fg)" }, pg); pt.textContent = "到達不能極";
+    mapParts.pole = pg;
+
+    jpG = mk("g", { class: "jp", tabindex: "0", role: "button", "aria-label": "日本列島。ドラッグや矢印キーで移動できます" });
+    mk("path", { d: pathJ(jp) }, jpG);
+    var jc = projJ([139.7, 35.7]);
+    var jl = mk("text", { x: jc[0] + 30, y: jc[1] + 40, class: "jp-label" }, jpG); jl.textContent = "日本";
+
+    var pins = [
+      ["ウルムチ", [87.62, 43.83], 16, -12, true],
+      ["トルファン", [89.19, 42.95], 12, 18],
+      ["ハミ", [93.51, 42.83], 12, -12],
+      ["カシュガル", [75.99, 39.47], 12, 16],
+      ["カナス湖", [87.03, 48.7], 12, 5],
+      ["サイラム湖", [81.18, 44.6], -12, -8, false, "end"],
+      ["ナラティ草原", [84.0, 43.33], -12, -12, false, "end"]
+    ];
+    mapParts.pins = pins.map(function (p) {
+      var xy = projX(p[1]);
+      var g = mk("g", { class: "pin" + (p[4] ? " main" : ""), transform: "translate(" + xy[0] + "," + xy[1] + ")" });
+      if (p[4]) mk("circle", { r: 9, class: "halo pulse" }, g);
+      mk("circle", { r: p[4] ? 7 : 4.5, class: "dot" }, g);
+      var t = mk("text", { x: p[2], y: p[3], "text-anchor": p[5] || "start", "dominant-baseline": "middle" }, g);
+      t.textContent = p[0];
+      return g;
+    });
+
+    setJp(START.x, START.y);
+
+    var drag = null;
+    function toSvg(e) { var m = svgEl.getScreenCTM(); if (!m) return { x: 0, y: 0 }; return { x: (e.clientX - m.e) / m.a, y: (e.clientY - m.f) / m.d }; }
+    jpG.addEventListener("pointerdown", function (e) {
+      if (hasGsap) gsap.killTweensOf(jpPos);
+      var p = toSvg(e); drag = { x: p.x - jpPos.x, y: p.y - jpPos.y };
+      jpG.classList.add("dragging"); jpG.setPointerCapture(e.pointerId); e.preventDefault();
+    });
+    jpG.addEventListener("pointermove", function (e) { if (!drag) return; var p = toSvg(e); setJp(p.x - drag.x, p.y - drag.y); });
+    function end() { drag = null; jpG.classList.remove("dragging"); }
+    jpG.addEventListener("pointerup", end);
+    jpG.addEventListener("pointercancel", end);
+    jpG.addEventListener("keydown", function (e) {
+      var step = e.shiftKey ? 40 : 10, d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
+      if (d) { e.preventDefault(); e.stopPropagation(); setJp(jpPos.x + d[0], jpPos.y + d[1]); }
+    });
+  }
+
+  function moveJp(x, y, delay) {
+    if (motion) gsap.to(jpPos, { x: x, y: y, duration: 1.4, delay: delay || 0, ease: "expo.inOut", onUpdate: function () { setJp(jpPos.x, jpPos.y); } });
+    else setJp(x, y);
+  }
+  var ob = document.getElementById("overlay"), rb = document.getElementById("reset");
+  if (ob) ob.addEventListener("click", function () { moveJp(0, 0); });
+  if (rb) rb.addEventListener("click", function () { moveJp(START.x, START.y); });
+  var nbTimers = [];
+  function showNeighbors() {
+    if (!mapParts.nb || !mapParts.nb.length) return;
+    nbTimers.forEach(clearTimeout); nbTimers = [];
+    mapParts.nb.forEach(function (c) { c.path.classList.remove("on"); });
+    mapParts.nb.forEach(function (c, i) {
+      nbTimers.push(setTimeout(function () {
+        c.path.classList.add("on");
+        if (motion) gsap.fromTo(c.label, { scale: .4, opacity: 0, transformOrigin: "0px 0px" }, { scale: 1, opacity: 1, duration: .5, ease: "back.out(3)" });
+      }, reduce ? 0 : i * 380));
+    });
+    nbTimers.push(setTimeout(function () { mapParts.nb.forEach(function (c) { c.path.classList.remove("on"); }); }, reduce ? 6000 : 8 * 380 + 4500));
+  }
+  var nbb = document.getElementById("nbbtn"), nbf = document.getElementById("nbfact");
+  if (nbb) nbb.addEventListener("click", showNeighbors);
+  if (nbf) { nbf.addEventListener("click", showNeighbors); nbf.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showNeighbors(); } }); }
+
+  /* ---------- sea distance map (city) ---------- */
+  var seaParts = null;
+  (function seaMap() {
+    var svg = document.getElementById("sea");
+    if (!svg || !window.d3 || !window.WORLD) return;
+    var U = [87.62, 43.83], KM = 6371;
+    // 一番近い海岸（陸地ポリゴンの外周のみ。カスピ海などの湖＝内側の穴は除外）
+    var best = { d: Infinity, p: null };
+    WORLD.land.forEach(function (poly) { poly[0].forEach(function (pt) { var d = d3.geoDistance(U, pt); if (d < best.d) best = { d: d, p: pt }; }); });
+    var coastKm = best.d * KM, coastR = best.d * 180 / Math.PI;
+    var proj = d3.geoAzimuthalEquidistant().rotate([-U[0], -U[1]]).clipAngle(47).scale(300 / (47 * Math.PI / 180)).translate([320, 320]).precision(.3);
+    var path = d3.geoPath(proj);
+    function el(tag, a, parent) { var e = document.createElementNS(NS, tag); Object.keys(a).forEach(function (k) { e.setAttribute(k, a[k]); }); (parent || svg).appendChild(e); return e; }
+    function text(x, y, t, cls, anchor) { var e = el("text", { x: x, y: y, class: "lbl " + (cls || ""), "text-anchor": anchor || "middle" }); e.textContent = t; return e; }
+    el("path", { d: path({ type: "Sphere" }), class: "ocean" });
+    el("path", { d: path({ type: "MultiPolygon", coordinates: WORLD.land.map(function (p) { return [p[0]]; }) }), class: "land" });
+    var lakes = []; WORLD.land.forEach(function (p) { p.slice(1).forEach(function (r) { lakes.push([r.slice().reverse()]); }); });
+    if (lakes.length) el("path", { d: path({ type: "MultiPolygon", coordinates: lakes }), class: "lake" });
+    if (window.GEO) el("path", { d: path({ type: "MultiPolygon", coordinates: fixWinding(GEO.xinjiang) }), class: "xj" });
+    [1000, 2000, 3000, 4000, 5000].forEach(function (km) {
+      el("path", { d: path(d3.geoCircle().center(U).radius(km / KM * 180 / Math.PI)()), class: "ring" });
+      var y = 320 - km / KM / (47 * Math.PI / 180) * 300;
+      var t = el("text", { x: 324, y: y - 4, class: "ring-label" }); t.textContent = nfmt(km) + "km";
+    });
+    var reach = el("path", { d: path(d3.geoCircle().center(U).radius(coastR)()), class: "reach" });
+    var c = proj(best.p), u = proj(U);
+    var ray = el("path", { d: path({ type: "LineString", coordinates: [U, best.p] }), class: "ray" });
+    var halo = el("circle", { cx: c[0], cy: c[1], r: 9, class: "coast-halo pulse" });
+    var dot = el("circle", { cx: c[0], cy: c[1], r: 5, class: "coast" });
+    var mid = proj(d3.geoInterpolate(U, best.p)(.55));
+    var distT = text(mid[0] + 14, mid[1], "約" + nfmt(Math.round(coastKm / 10) * 10) + "km", "dist", "start");
+    var coastT = text(c[0], c[1] + 26, "一番近い海：ベンガル湾", "", "middle");
+    // labels
+    [["北極海", [75, 74]], ["アラビア海", [64, 17]], ["東シナ海", [125, 29]], ["日本海", [134, 40]]].forEach(function (a) {
+      var q = proj(a[1]); if (q && d3.geoDistance(U, a[1]) < 46 * Math.PI / 180) text(q[0], q[1], a[0], "sea");
+    });
+    var cas = proj([50.5, 41.8]); if (cas) text(cas[0], cas[1] + 34, "カスピ海（湖なので海ではない）", "small");
+    var pole = proj([86.67, 46.28]);
+    var star = el("path", { d: d3.symbol().type(d3.symbolStar).size(150)(), transform: "translate(" + pole[0] + "," + pole[1] + ")", class: "star" });
+    text(pole[0] + 10, pole[1] - 8, "到達不能極", "small", "start");
+    var saku = [138.43, 36.25], sk = proj(saku);
+    if (sk) {
+      el("path", { d: path(d3.geoCircle().center(saku).radius(115 / KM * 180 / Math.PI)()), class: "jp-dot", opacity: .55 });
+      text(sk[0] - 6, sk[1] - 18, "日本で一番海から遠い場所", "small", "end");
+      text(sk[0] - 6, sk[1] - 4, "（佐久市）でも約115km", "small", "end");
+    }
+    el("circle", { cx: u[0], cy: u[1], r: 7, class: "pin" });
+    text(u[0] + 12, u[1] - 10, "ウルムチ", "", "start");
+    seaParts = { reach: reach, ray: ray, dot: dot, halo: halo, distT: distT, coastT: coastT, star: star, path: path, U: U, R: coastR };
+  })();
+  function nfmt(n) { return new Intl.NumberFormat("ja-JP").format(n); }
+
+  /* ---------- globe: Tokyo -> Urumqi ---------- */
+  (function globe() {
+    var cv = document.getElementById("globe-cv");
+    if (!cv || !window.d3 || !window.WORLD) return;
+    var ctx = cv.getContext("2d");
+    var cs = getComputedStyle(document.documentElement);
+    function tok(n, f) { return (cs.getPropertyValue(n) || "").trim() || f; }
+    var COL = { glow: tok("--glow", "#8cc4ff"), saffron: tok("--saffron", "#e09a2f"), jp: tok("--jp-glow", "#ff8fa6"), fg: tok("--night-fg", "#e6eefb") };
+    var FONT = "Zen Kaku Gothic New, Hiragino Sans, Yu Gothic, sans-serif";
+
+    var land = { type: "MultiPolygon", coordinates: WORLD.land };
+    var china = { type: "MultiPolygon", coordinates: WORLD.china };
+    var xjF = window.GEO ? { type: "MultiPolygon", coordinates: fixWinding(GEO.xinjiang) } : null;
+    var jpF = window.GEO ? { type: "MultiPolygon", coordinates: fixWinding(GEO.japan) } : null;
+    var grat = d3.geoGraticule10();
+
+    var HND = [139.78, 35.55], PEK = [116.60, 40.08], URC = [87.47, 43.91];
+    var CITIES = [["東京", HND, "jp"], ["北京", PEK, ""], ["ウルムチ", URC, "main"]];
+    var KM = 6371;
+    function dist(a, b) { return d3.geoDistance(a, b) * KM; }
+    var detour = Math.round((dist(HND, PEK) + dist(PEK, URC) - dist(HND, URC)) / 10) * 10;
+
+    var MODES = {
+      real: { legs: [
+        { fly: true, from: HND, to: PEK, min: 230, name: "羽田 → 北京" },
+        { fly: false, at: PEK, min: 150, name: "北京で乗り継ぎ" },
+        { fly: true, from: PEK, to: URC, min: 250, name: "北京 → ウルムチ" }
+      ], note: "北京経由は遠回りに見えますが、北京は東京とウルムチを結ぶ最短ルート（大圏コース）のほぼ真上にあります。遠回りは<b>たった約" + detour + "km</b>です。時刻は一例で、乗り継ぎ時間によって変わります。" },
+      direct: { legs: [
+        { fly: true, from: HND, to: URC, min: 360, name: "羽田 → ウルムチ（仮）" }
+      ], note: "直行便があれば<b>約6時間</b>（仮の数字です）。西へ向かう便は偏西風が向かい風になるので、帰りのウルムチ → 東京のほうが短くなります。" }
+    };
+    Object.keys(MODES).forEach(function (k) {
+      var acc = 0;
+      MODES[k].legs.forEach(function (l) { l.start = acc; acc += l.min; if (l.fly) { l.interp = d3.geoInterpolate(l.from, l.to); l.km = dist(l.from, l.to); } });
+      MODES[k].total = acc;
+    });
+
+    // 出発 = 今日（日本時間）の 9:00 JST = 0:00 UTC
+    var nowJ = new Date(Date.now() + 9 * 36e5);
+    var DEP = Date.UTC(nowJ.getUTCFullYear(), nowJ.getUTCMonth(), nowJ.getUTCDate(), 0, 0);
+    function clock(ms, off) { var d = new Date(ms + off * 36e5); return String(d.getUTCHours()).padStart(2, "0") + ":" + String(d.getUTCMinutes()).padStart(2, "0"); }
+    function subsolar(ms) {
+      var d = new Date(ms), rad = Math.PI / 180;
+      var N = Math.floor((ms - Date.UTC(d.getUTCFullYear(), 0, 0)) / 864e5);
+      var decl = -23.44 * Math.cos(2 * Math.PI / 365 * (N + 10));
+      var B = 2 * Math.PI * (N - 81) / 364;
+      var eot = 9.87 * Math.sin(2 * B) - 7.53 * Math.cos(B) - 1.5 * Math.sin(B);
+      var h = d.getUTCHours() + d.getUTCMinutes() / 60;
+      var lon = ((12 - h - eot / 60) * 15 + 540) % 360 - 180;
+      return [lon, decl];
+    }
+
+    var mode = "real", sim = 0, playing = false, follow = true, dragging = false, visible = false, started = false;
+    var rot = [20, -15], RATE = 45; // シミュレーション分 / 秒
+    var proj = d3.geoOrthographic().clipAngle(90).precision(.4);
+    var path = d3.geoPath(proj, ctx);
+    var W = 0, R = 0;
+    var PLANE = new Path2D("M0,-11 L1.6,-8 L1.6,-3 L10,2 L10,4.2 L1.6,1.6 L1.1,7 L4,9 L4,10.6 L0,9.6 L-4,10.6 L-4,9 L-1.1,7 L-1.6,1.6 L-10,4.2 L-10,2 L-1.6,-3 L-1.6,-8 Z");
+
+    function size() {
+      var w = cv.clientWidth; if (!w) return;
+      var dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = Math.round(w * dpr); cv.height = Math.round(w * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      W = w; R = w / 2 * .86;
+      proj.translate([w / 2, w / 2]).scale(R);
+    }
+
+    function state(m) {
+      var M = MODES[mode], km = 0, cur = M.legs[M.legs.length - 1], pos = URC, ahead = null, li = M.legs.length - 1;
+      for (var i = 0; i < M.legs.length; i++) {
+        var l = M.legs[i];
+        if (m < l.start + l.min || i === M.legs.length - 1) {
+          cur = l; li = i;
+          var t = Math.max(0, Math.min(1, (m - l.start) / l.min));
+          if (l.fly) {
+            var e = .7 * t + .3 * d3.easeSinInOut(t);
+            pos = l.interp(e); ahead = l.interp(Math.min(1, e + .02)); km += l.km * e;
+            if (e >= 1) ahead = null;
+            cur.e = e;
+          } else { pos = l.at; }
+          break;
+        }
+        if (l.fly) km += l.km;
+      }
+      return { leg: cur, li: li, pos: pos, ahead: ahead, km: km };
+    }
+
+    function visibleAt(p) { return d3.geoDistance(p, [-rot[0], -rot[1]]) < Math.PI / 2 - .02; }
+
+    function draw() {
+      if (!W) return;
+      var M = MODES[mode], st = state(sim), c = W / 2, ms = DEP + sim * 6e4;
+      proj.rotate(rot);
+      ctx.clearRect(0, 0, W, W);
+
+      // atmosphere
+      var ag = ctx.createRadialGradient(c, c, R * .96, c, c, R * 1.16);
+      ag.addColorStop(0, "rgba(140,196,255,.42)"); ag.addColorStop(.35, "rgba(90,150,255,.14)"); ag.addColorStop(1, "rgba(90,150,255,0)");
+      ctx.fillStyle = ag; ctx.beginPath(); ctx.arc(c, c, R * 1.16, 0, 2 * Math.PI); ctx.fill();
+
+      // ocean
+      var og = ctx.createRadialGradient(c - R * .35, c - R * .4, R * .1, c, c, R);
+      og.addColorStop(0, "#1d4a8c"); og.addColorStop(.6, "#0d244b"); og.addColorStop(1, "#06132b");
+      ctx.fillStyle = og; ctx.beginPath(); path({ type: "Sphere" }); ctx.fill();
+
+      ctx.beginPath(); path(grat); ctx.strokeStyle = "rgba(140,196,255,.10)"; ctx.lineWidth = .7; ctx.stroke();
+
+      ctx.beginPath(); path(land); ctx.fillStyle = "#1f3a63"; ctx.fill(); ctx.strokeStyle = "rgba(140,196,255,.28)"; ctx.lineWidth = .6; ctx.stroke();
+      ctx.beginPath(); path(china); ctx.fillStyle = "#29507f"; ctx.fill();
+      if (xjF) {
+        ctx.save(); ctx.shadowColor = COL.glow; ctx.shadowBlur = 14;
+        ctx.beginPath(); path(xjF); ctx.fillStyle = "rgba(140,196,255,.42)"; ctx.fill(); ctx.strokeStyle = COL.glow; ctx.lineWidth = 1.2; ctx.stroke();
+        ctx.restore();
+      }
+      if (jpF) {
+        ctx.save(); ctx.shadowColor = COL.jp; ctx.shadowBlur = 12;
+        ctx.beginPath(); path(jpF); ctx.fillStyle = "rgba(255,120,150,.6)"; ctx.fill(); ctx.strokeStyle = COL.jp; ctx.lineWidth = .8; ctx.stroke();
+        ctx.restore();
+      }
+
+      // night side (centered on the anti-solar point)
+      var ss = subsolar(ms), anti = [ss[0] + 180, -ss[1]];
+      [[89.5, .40], [86, .16], [80, .14]].forEach(function (r) {
+        ctx.beginPath(); path(d3.geoCircle().center(anti).radius(r[0])()); ctx.fillStyle = "rgba(1,4,14," + r[1] + ")"; ctx.fill();
+      });
+
+      // planned route (dashed) and flown route (glowing)
+      ctx.save(); ctx.setLineDash([2, 6]); ctx.lineCap = "round"; ctx.strokeStyle = "rgba(224,154,47,.55)"; ctx.lineWidth = 1.6;
+      M.legs.forEach(function (l) { if (l.fly) { ctx.beginPath(); path({ type: "LineString", coordinates: [l.from, l.to] }); ctx.stroke(); } });
+      ctx.restore();
+      ctx.save(); ctx.lineCap = "round"; ctx.strokeStyle = COL.saffron; ctx.lineWidth = 2.8; ctx.shadowColor = COL.saffron; ctx.shadowBlur = 14;
+      M.legs.forEach(function (l, i) {
+        if (!l.fly || i > st.li) return;
+        var to = i < st.li ? l.to : st.pos;
+        if (i === st.li && l.fly && d3.geoDistance(l.from, to) < 1e-4) return;
+        ctx.beginPath(); path({ type: "LineString", coordinates: [l.from, to] }); ctx.stroke();
+      });
+      ctx.restore();
+
+      // cities
+      ctx.textBaseline = "middle";
+      CITIES.forEach(function (ct) {
+        if (!visibleAt(ct[1])) return;
+        var p = proj(ct[1]), main = ct[2] === "main";
+        var col = ct[2] === "jp" ? COL.jp : main ? "#ff5d7a" : COL.glow;
+        if (main) {
+          var ph = (performance.now() / 1600) % 1;
+          ctx.beginPath(); ctx.arc(p[0], p[1], 5 + ph * 16, 0, 2 * Math.PI); ctx.strokeStyle = "rgba(255,93,122," + (1 - ph) * .8 + ")"; ctx.lineWidth = 1.5; ctx.stroke();
+        }
+        ctx.beginPath(); ctx.arc(p[0], p[1], main ? 4.5 : 3.5, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill();
+        ctx.font = (main ? "700 15px " : "500 13px ") + FONT; ctx.fillStyle = COL.fg;
+        ctx.shadowColor = "rgba(0,0,0,.8)"; ctx.shadowBlur = 6;
+        var right = ct[0] === "東京";
+        ctx.textAlign = right ? "left" : "right";
+        ctx.fillText(ct[0], p[0] + (right ? 9 : -9), p[1] - (main ? 12 : 10));
+        ctx.shadowBlur = 0;
+      });
+
+      // plane
+      if (visibleAt(st.pos)) {
+        var pp = proj(st.pos), ang = 0;
+        var ref = st.ahead || (MODES[mode].legs[st.li + 1] ? MODES[mode].legs[st.li + 1].to : null);
+        if (ref && visibleAt(ref)) { var pa = proj(ref); ang = Math.atan2(pa[1] - pp[1], pa[0] - pp[0]) + Math.PI / 2; }
+        else ang = -Math.PI / 2;
+        if (!st.leg.fly || sim >= MODES[mode].total) {
+          var q = (performance.now() / 1200) % 1;
+          ctx.beginPath(); ctx.arc(pp[0], pp[1], 10 + q * 14, 0, 2 * Math.PI); ctx.strokeStyle = "rgba(224,154,47," + (1 - q) * .7 + ")"; ctx.lineWidth = 1.5; ctx.stroke();
+        }
+        ctx.save(); ctx.translate(pp[0], pp[1]); ctx.rotate(ang); ctx.scale(1.25, 1.25);
+        ctx.shadowColor = "#ffffff"; ctx.shadowBlur = 16; ctx.fillStyle = "#ffffff"; ctx.fill(PLANE);
+        ctx.restore();
+      }
+
+      // specular + rim
+      var sg = ctx.createRadialGradient(c - R * .45, c - R * .5, 0, c - R * .45, c - R * .5, R * 1.1);
+      sg.addColorStop(0, "rgba(255,255,255,.10)"); sg.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(c, c, R, 0, 2 * Math.PI); ctx.fill();
+      ctx.beginPath(); ctx.arc(c, c, R, 0, 2 * Math.PI); ctx.strokeStyle = "rgba(140,196,255,.45)"; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // ---- HUD ----
+    var $ = function (id) { return document.getElementById(id); };
+    var elE = $("g-elapsed"), elK = $("g-km"), elJ = $("g-jst"), elC = $("g-cst"), elP = $("g-phase"), elL = $("g-legs"), elN = $("g-note"), elS = $("g-scrub"), elB = $("g-play");
+    var nf = new Intl.NumberFormat("ja-JP"), lastKey = "";
+    function dur(m) { var h = Math.floor(m / 60), mm = m % 60; return "約" + (h ? h + "時間" : "") + (mm ? mm + "分" : ""); }
+    function buildLegs() {
+      var M = MODES[mode];
+      elL.innerHTML = "";
+      M.legs.forEach(function (l) {
+        var li = document.createElement("li"); li.className = "leg";
+        var b = document.createElement("b"); b.textContent = l.name;
+        var d = document.createElement("span"); d.className = "dur"; d.textContent = dur(l.min);
+        var s = document.createElement("small");
+        var a = DEP + l.start * 6e4, z = DEP + (l.start + l.min) * 6e4;
+        s.textContent = !l.fly ? "空港で次の便を待ちます"
+          : (l.start === 0 ? "日本時間 " + clock(a, 9) : "北京時間 " + clock(a, 8)) + " 発 → 北京時間 " + clock(z, 8) + " 着";
+        li.appendChild(b); li.appendChild(d); li.appendChild(s); elL.appendChild(li);
+      });
+      elN.innerHTML = M.note;
+    }
+    function phase(st) {
+      var M = MODES[mode], ms = DEP + sim * 6e4;
+      if (sim <= 0) return "羽田を出発";
+      if (sim >= M.total) {
+        var ss = subsolar(ms), elev = 90 - d3.geoDistance(URC, ss) * 180 / Math.PI;
+        var sky = elev < -6 ? "外はもう真っ暗" : elev < 4 ? "ちょうど日が沈むころ" : "外はまだ明るい時間";
+        return "ウルムチ到着！ 北京時間 " + clock(ms, 8) + "、" + sky;
+      }
+      if (!st.leg.fly) return "北京で乗り継ぎ中…";
+      if (xjF && d3.geoContains(xjF, st.pos)) return "新疆に入りました。あと少し！";
+      if (d3.geoContains(china, st.pos)) return st.leg.name + "　中国の上空";
+      return st.leg.name + "　飛行中";
+    }
+    function hud() {
+      var M = MODES[mode], st = state(sim), m = Math.round(sim), ms = DEP + m * 6e4;
+      var key = mode + m;
+      if (key === lastKey) return; lastKey = key;
+      elE.innerHTML = Math.floor(m / 60) + "<small>時間</small>" + String(m % 60).padStart(2, "0") + "<small>分</small>";
+      elK.textContent = nf.format(Math.round(st.km));
+      elJ.textContent = clock(ms, 9); elC.textContent = clock(ms, 8);
+      elP.textContent = phase(st);
+      Array.prototype.forEach.call(elL.children, function (li, i) {
+        li.classList.toggle("on", i === st.li && sim > 0 && sim < M.total);
+        li.classList.toggle("done", i < st.li || sim >= M.total);
+      });
+      if (!scrubbing) elS.value = Math.round(sim / M.total * 1000);
+      elB.textContent = playing ? "❚❚ 一時停止" : sim >= M.total ? "↺ もう一度" : sim > 0 ? "▶ 続きから" : "▶ 出発する";
+    }
+
+    // ---- loop ----
+    var last = 0, raf = 0;
+    function frame(t) {
+      raf = 0;
+      var dt = last ? Math.min(.1, (t - last) / 1000) : 0; last = t;
+      var M = MODES[mode];
+      if (playing) { sim = Math.min(M.total, sim + dt * RATE); if (sim >= M.total) playing = false; }
+      if (follow && !dragging) {
+        var st = state(sim), tg = [-(st.pos[0] - 6), -(st.pos[1] - 3)];
+        var dl = ((tg[0] - rot[0] + 540) % 360) - 180, k = started ? .07 : .04;
+        rot = [rot[0] + dl * k, rot[1] + (tg[1] - rot[1]) * k];
+      }
+      draw(); hud();
+      if (visible) raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && visible) { last = 0; raf = requestAnimationFrame(frame); } }
+    function play() {
+      if (sim >= MODES[mode].total) sim = 0;
+      playing = true; follow = true; started = true; kick(); hud();
+    }
+    function pause() { playing = false; lastKey = ""; hud(); }
+
+    // ---- input ----
+    var scrubbing = false, dragFrom = null;
+    elB.addEventListener("click", function () { playing ? pause() : play(); });
+    elS.addEventListener("input", function () {
+      scrubbing = true; playing = false; follow = true; started = true;
+      sim = elS.value / 1000 * MODES[mode].total; lastKey = ""; kick();
+      if (!visible) { draw(); hud(); }
+    });
+    elS.addEventListener("change", function () { scrubbing = false; lastKey = ""; hud(); });
+    document.querySelectorAll(".seg button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        mode = b.getAttribute("data-mode");
+        document.querySelectorAll(".seg button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+        buildLegs(); lastKey = "";
+        if (reduce) { sim = MODES[mode].total; playing = false; follow = true; draw(); hud(); kick(); }
+        else { sim = 0; play(); }
+      });
+    });
+    cv.addEventListener("pointerdown", function (e) {
+      dragging = true; follow = false; dragFrom = [e.clientX, e.clientY];
+      cv.classList.add("dragging"); cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      var k = 75 / R;
+      rot = [rot[0] + (e.clientX - dragFrom[0]) * k, Math.max(-80, Math.min(80, rot[1] - (e.clientY - dragFrom[1]) * k))];
+      dragFrom = [e.clientX, e.clientY]; kick();
+    });
+    function endDrag() { dragging = false; cv.classList.remove("dragging"); }
+    cv.addEventListener("pointerup", endDrag);
+    cv.addEventListener("pointercancel", endDrag);
+    cv.addEventListener("keydown", function (e) {
+      var d = { ArrowLeft: [10, 0], ArrowRight: [-10, 0], ArrowUp: [0, -10], ArrowDown: [0, 10] }[e.key];
+      if (d) { e.preventDefault(); e.stopPropagation(); follow = false; rot = [rot[0] + d[0], Math.max(-80, Math.min(80, rot[1] + d[1]))]; kick(); if (!visible) draw(); }
+      else if (e.key === " " || e.key === "Enter") { e.preventDefault(); e.stopPropagation(); playing ? pause() : play(); }
+    });
+
+    // ---- start ----
+    size(); buildLegs();
+    if (reduce) { sim = MODES[mode].total; rot = [-(URC[0] + 20), -(URC[1] - 5)]; started = true; }
+    draw(); hud();
+    window.addEventListener("resize", function () { size(); draw(); });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        visible = es[0].isIntersecting; if (visible) kick();
+        if (visible && !started && es[0].intersectionRatio > .45) { started = true; setTimeout(play, 900); }
+      }, { threshold: [0, .45] }).observe(cv);
+    } else { visible = true; kick(); }
+  })();
+
+  /* ---------- nature: helicopter flyover over real terrain ---------- */
+  (function flyover() {
+    var root = document.getElementById("fly"), cv = document.getElementById("fly-cv"), cardsBox = document.getElementById("fly-cards");
+    if (!root || !cardsBox) return;
+    var STOPS = [
+      { name: "新疆を北から南へ", season: "", tag: "START", lon: 85.2, lat: 42.4, dist: 23, pitch: 56, head: 0,
+        text: "北にアルタイ山脈、真ん中に天山山脈、南に崑崙山脈。3つの山脈のあいだに、ジュンガル盆地とタリム盆地（タクラマカン砂漠）があります。スクロールで出発します。" },
+      { name: "カナス湖", season: "秋", tag: "ALTAY", gallery: [["kanas", "森に囲まれたカナス湖"], ["kanas-2", "森を縫って蛇行するカナス川の月亮湾"], ["kanas-3", "色づき始めた森とカナス湖"]], img: "kanas", alt: "森に囲まれたカナス湖", lon: 87.03, lat: 48.72, dist: 2.0, pitch: 30, head: 20,
+        spec: "湖面標高 約1,340m ・ 見ごろ 9月下旬〜10月上旬", text: "新疆の最北端、ロシアとモンゴルの国境近く。秋はカラマツやシラカバが一面の金色に。季節や天気で湖の色が変わるので「変色湖」とも呼ばれます。" },
+      { name: "サイラム湖", season: "夏", tag: "BORTALA", gallery: [["sayram", "サイラム湖の岸辺"], ["sayram-2", "黄色い花が咲く草原と紺碧の湖"], ["sayram-3", "雪の天山を背にしたターコイズブルーの湖"]], img: "sayram", alt: "青く澄んだサイラム湖と岸辺", lon: 81.18, lat: 44.6, dist: 2.3, pitch: 30, head: 195,
+        spec: "湖面標高 約2,070m ・ 見ごろ 6〜7月", text: "「大西洋最後の一滴の涙」と呼ばれる真っ青な高山湖。初夏は湖のまわりが一面の花畑になります。" },
+      { name: "ナラティ草原", season: "夏", tag: "ILI", gallery: [["nalati", "なだらかな緑の丘が続く草原"], ["nalati-2", "雪山のふもとの「空中草原」"], ["nalati-3", "トウヒの森と草原に建つユルト"]], img: "nalati", alt: "なだらかな緑の丘が続くナラティ草原", lon: 84.0, lat: 43.33, dist: 2.0, pitch: 28, head: 150,
+        spec: "イリ地方 ・ 見ごろ 6〜8月", text: "天山山脈のふもとに広がる高原草原。夏はカザフ族の遊牧民がユルト（移動式テント）で暮らし、馬や羊が放牧されます。" },
+      { name: "バインブルク草原", season: "秋", tag: "BAYINGOLIN", gallery: [["bayanbulak", "草原を大きく蛇行する開都川"], ["bayanbulak-2", "夕日に光る九曲十八湾"], ["bayanbulak-3", "幾重にも曲がりくねる川"]], img: "bayanbulak", alt: "草原を大きく蛇行して流れる川", lon: 84.15, lat: 42.95, dist: 2.1, pitch: 32, head: 210,
+        spec: "標高 約2,500m ・ 独庫公路の途中", text: "大きく何度も曲がる川「九曲十八湾」と夕日が有名。ここを通る独庫公路は天山山脈を南北に越える絶景ルートで、雪のない6〜10月ごろだけ通れます。" },
+      { name: "天山天池", short: "天池", season: "冬", tag: "URUMQI", gallery: [["tianchi", "山と森に囲まれた天池"], ["tianchi-2", "雪をいただく天山と天池"], ["tianchi-3", "冬のボゴダ峰（上空から）"]], img: "tianchi", alt: "山と森に囲まれた天山天池", lon: 88.13, lat: 43.89, dist: 1.8, pitch: 30, head: 120,
+        spec: "湖面標高 約1,900m ・ ウルムチから車で約2時間", text: "ボゴダ峰（5,445m）のふもとの湖。冬は湖が凍り、まわりの山は真っ白に。ウルムチから一番行きやすい絶景です。" },
+      { name: "トルファンの火焔山", short: "火焔山", season: "夏", tag: "TURPAN", gallery: [["flaming", "赤い地層が筋状に続く火焔山"], ["turpan-2", "日干しれんがの街が残る交河故城"], ["turpan-3", "トルファンの蘇公塔（エミン・ミナレット）"], ["grapes", "トルファンのブドウ売り"]], img: "flaming", alt: "赤い地層が筋状に続く火焔山", lon: 89.6, lat: 42.95, dist: 2.2, pitch: 30, head: 185,
+        spec: "トルファン盆地 ・ 海面より約150m低い場所も", text: "『西遊記』にも出てくる赤い山。夏は40℃を超える中国で最も暑い場所の一つです。それでも雪解け水を運ぶ地下水路「カレーズ」のおかげで、甘いブドウが育ちます。" },
+      { name: "胡楊林とタクラマカン砂漠", short: "胡楊林", season: "秋", tag: "TARIM", gallery: [["populus", "黄色く色づいた胡楊の林"], ["tarim-2", "水面に映る秋の胡楊"], ["tarim-3", "どこまでも続くタクラマカン砂漠の砂丘"]], img: "populus", alt: "黄色く色づいた胡楊の林", lon: 84.3, lat: 41.0, dist: 3.0, pitch: 32, head: 195,
+        spec: "見ごろ 10月中旬 ・ 砂漠の面積 約33万km²", text: "タクラマカン砂漠のふちに広がる胡楊（コヨウ）の森。秋は金色に色づきます。「生きて千年枯れず、枯れて千年倒れず、倒れて千年朽ちず」と言われる木です。" },
+      { name: "カラクリ湖とムズタグ・アタ", short: "カラクリ湖", season: "夏", tag: "PAMIR", gallery: [["karakul", "ムズタグ・アタが映るカラクリ湖"], ["karakul-2", "湖のほとりから見るムズタグ・アタ（7,546m）"], ["karakul-3", "パミールの村とムズタグ・アタ"]], img: "karakul", alt: "雪をかぶったムズタグ・アタ峰が映るカラクリ湖", lon: 75.04, lat: 38.43, dist: 1.9, pitch: 24, head: 160,
+        spec: "湖面標高 約3,600m ・ ムズタグ・アタ 7,546m", text: "新疆の南西、パミール高原の湖。「氷山の父」と呼ばれるムズタグ・アタが湖に映ります。カシュガルからカラコルム・ハイウェイで行けます。" },
+      { name: "これ全部が、ひとつの自治区の中。", season: "", tag: "GOAL", lon: 84.8, lat: 42.6, dist: 25, pitch: 62, head: 0,
+        text: "北のカナス湖から南のカラクリ湖まで、直線で約1,500km。札幌から鹿児島とほぼ同じ距離です。" }
+    ];
+    var N = STOPS.length - 1;
+    function shortName(st) { return st.short || st.name; }
+
+    // ---- cards (photo gallery + text) ----
+    var cards = STOPS.map(function (st, i) {
+      var a = document.createElement("article"); a.className = "fcard" + (st.img ? "" : " fcard--big");
+      var gal = st.gallery || (st.img ? [[st.img, st.alt]] : []);
+      if (gal.length) {
+        var g = document.createElement("div"); g.className = "gal";
+        var main = document.createElement("img"); main.className = "main"; main.src = "images/" + gal[0][0] + ".jpg"; main.alt = gal[0][1]; main.loading = "lazy";
+        var cap = document.createElement("span"); cap.className = "gcap"; cap.textContent = gal[0][1];
+        g.appendChild(main); g.appendChild(cap);
+        if (gal.length > 1) {
+          var th = document.createElement("div"); th.className = "thumbs";
+          gal.forEach(function (it, j) {
+            var bt = document.createElement("button"); bt.type = "button"; bt.className = j ? "" : "on"; bt.setAttribute("aria-label", it[1]);
+            var im = document.createElement("img"); im.src = "images/" + it[0] + ".jpg"; im.alt = ""; im.loading = "lazy"; bt.appendChild(im);
+            bt.addEventListener("click", function () { a._show(j); a._hold = Date.now(); });
+            th.appendChild(bt);
+          });
+          g.appendChild(th);
+        }
+        a._gi = 0;
+        a._show = function (j) {
+          a._gi = j; main.style.opacity = .35;
+          var nx = new Image(), url = "images/" + gal[j][0] + ".jpg";
+          nx.onload = nx.onerror = function () { if (a._gi !== j) return; main.src = url; main.alt = gal[j][1]; cap.textContent = gal[j][1]; main.style.opacity = 1; };
+          nx.src = url;
+          Array.prototype.forEach.call(a.querySelectorAll(".thumbs button"), function (b, k) { b.classList.toggle("on", k === j); });
+        };
+        a._n = gal.length;
+        a.appendChild(g);
+      }
+      var b = document.createElement("div"); b.className = "body";
+      var tg = document.createElement("span"); tg.className = "tag"; tg.textContent = (st.season ? st.season + " ・ " : "") + st.tag; b.appendChild(tg);
+      var h = document.createElement("h3"); h.textContent = st.name; b.appendChild(h);
+      if (st.spec) { var sp = document.createElement("span"); sp.className = "spec"; sp.textContent = st.spec; b.appendChild(sp); }
+      var p = document.createElement("p"); p.textContent = st.text; b.appendChild(p);
+      if (i === 0 || i === N) {
+        var acts = document.createElement("div"); acts.className = "acts";
+        var go1 = document.createElement("button"); go1.type = "button"; go1.className = "btn btn--primary";
+        go1.textContent = i === 0 ? "🚁 ヘリで出発する" : "↺ 最初の場所からもう一度";
+        go1.addEventListener("click", function () { go(i === 0 ? 1 : 1); });
+        acts.appendChild(go1); b.appendChild(acts);
+      }
+      a.appendChild(b); cardsBox.appendChild(a); return a;
+    });
+    setInterval(function () {
+      cards.forEach(function (c) { if (c.classList.contains("on") && c._n > 1 && !(c._hold && Date.now() - c._hold < 9000)) c._show((c._gi + 1) % c._n); });
+    }, 4200);
+    function showCard(k) { cards.forEach(function (c, j) { c.classList.toggle("on", j === k); }); }
+    showCard(0);
+
+    var at = 0, target = 0, flight = null, pinST = null, ready = false, raf = 0, visible = false;
+    function go(k) {
+      k = Math.max(0, Math.min(N, k));
+      if (pinST) {
+        var html = document.documentElement, prev = html.style.scrollBehavior; html.style.scrollBehavior = "auto";
+        window.scrollTo(0, Math.round(pinST.start + (pinST.end - pinST.start) * k / N));
+        html.style.scrollBehavior = prev;
+      }
+      flyTo(k);
+    }
+    function no3d() { root.classList.add("no3d"); if (pinST) { pinST.kill(true); pinST = null; if (hasGsap) ScrollTrigger.refresh(); } }
+    if (motion) {
+      pinST = ScrollTrigger.create({
+        trigger: root, start: "top top", end: function () { return "+=" + Math.round(N * window.innerHeight * .85); },
+        pin: true, invalidateOnRefresh: true,
+        onUpdate: function (self) { visible = true; var k = Math.round(self.progress * N); if (k !== target) flyTo(k); kick(); }
+      });
+    }
+    document.getElementById("fly-prev").addEventListener("click", function () { go(target - 1); });
+    document.getElementById("fly-next").addEventListener("click", function () { go(target + 1); });
+    var elCount = document.getElementById("fly-count");
+    elCount.addEventListener("click", function () { go(target === 0 ? 1 : target === N ? 0 : target + 1); });
+
+    var flyToImpl = null;
+    function flyTo(k) { if (flyToImpl) flyToImpl(k); else { target = at = Math.max(0, Math.min(N, k)); showCard(at); } }
+
+    if (!cv || !window.THREE || !window.TERRAIN || typeof DecompressionStream === "undefined") { no3d(); return; }
+    var renderer;
+    try { renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, powerPreference: "high-performance" }); }
+    catch (e) { no3d(); return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+    renderer.setClearColor(0x000000, 0);
+
+    var T = window.TERRAIN, W = T.w, H = T.h, LON0 = T.bbox[0], LAT0 = T.bbox[1], LON1 = T.bbox[2], LAT1 = T.bbox[3];
+    var LONC = (LON0 + LON1) / 2, LATC = (LAT0 + LAT1) / 2, D2R = Math.PI / 180;
+    var SX = 111.32 * Math.cos(LATC * D2R) / 100, SZ = 111.32 / 100, SY = 3.5 / 1e5;
+    var PW = (LON1 - LON0) * SX, PH = (LAT1 - LAT0) * SZ, heights = null;
+    function wx(lon) { return (lon - LONC) * SX; }
+    function wz(lat) { return -(lat - LATC) * SZ; }
+    function hAt(lon, lat) {
+      var fx = Math.max(0, Math.min(W - 1.001, (lon - LON0) / (LON1 - LON0) * (W - 1)));
+      var fy = Math.max(0, Math.min(H - 1.001, (LAT1 - lat) / (LAT1 - LAT0) * (H - 1)));
+      var x = Math.floor(fx), y = Math.floor(fy), u = fx - x, v = fy - y, k = y * W + x;
+      return (heights[k] * (1 - u) + heights[k + 1] * u) * (1 - v) + (heights[k + W] * (1 - u) + heights[k + W + 1] * u) * v;
+    }
+
+    var scene = new THREE.Scene();
+    var cam = new THREE.PerspectiveCamera(40, 1, .005, 300);
+    var uniforms = {
+      uTex: { value: new THREE.DataTexture(new Uint8Array([120, 110, 90, 255]), 1, 1) }, uMask: { value: null }, uHasTex: { value: 0 },
+      uWinter: { value: 0 }, uAutumn: { value: 0 }, uSnow: { value: 4300 },
+      uFog: { value: new THREE.Color(0xcddbe9) }, uFogNear: { value: 30 }, uFogFar: { value: 120 },
+      uSun: { value: new THREE.Vector3(-.45, .75, .5).normalize() }
+    };
+    var mat = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: [
+        "attribute float aH; varying vec2 vUv; varying float vH; varying vec3 vN; varying float vDist;",
+        "void main(){ vUv = uv; vH = aH; vN = normal; vec4 mv = modelViewMatrix * vec4(position, 1.0); vDist = -mv.z; gl_Position = projectionMatrix * mv; }"
+      ].join("\n"),
+      fragmentShader: [
+        "uniform sampler2D uTex; uniform sampler2D uMask; uniform float uHasTex, uWinter, uAutumn, uSnow, uFogNear, uFogFar; uniform vec3 uFog, uSun;",
+        "varying vec2 vUv; varying float vH; varying vec3 vN; varying float vDist;",
+        "vec3 proc(float h, float lat){ vec3 c = mix(vec3(.56,.55,.40), vec3(.80,.68,.47), smoothstep(42.5, 40.5, lat));",
+        "  c = mix(c, vec3(.34,.44,.27), smoothstep(1300.,1900.,h) * (1. - smoothstep(2900.,3400.,h)) * .85);",
+        "  c = mix(c, vec3(.52,.47,.42), smoothstep(3000.,3600.,h)); return c; }",
+        "void main(){",
+        "  float lat = mix(" + LAT0.toFixed(1) + ", " + LAT1.toFixed(1) + ", vUv.y);",
+        "  vec3 base = uHasTex > .5 ? texture2D(uTex, vUv).rgb : proc(vH, lat);",
+        "  float veg = clamp((base.g - max(base.r, base.b)) * 14., 0., 1.) * smoothstep(300., 900., vH);",
+        "  base = mix(base, vec3(base.g * 1.4 + .05, base.g * 1.0, base.b * .35), veg * uAutumn * .75);",
+        "  vec3 n = normalize(vN);",
+        "  float line = mix(uSnow, mix(2500., 1000., smoothstep(41.8, 44.2, lat)), uWinter);",
+        "  float snow = smoothstep(line - 250., line + 450., vH) * smoothstep(.25, .7, n.y);",
+        "  vec3 snowc = vec3(.88, .92, .98) * (.8 + .3 * dot(base, vec3(.3, .59, .11)));",
+        "  base = mix(base, snowc, snow * .85);",
+        "  float dif = max(dot(n, uSun), 0.);",
+        "  vec3 col = base * (.6 + .65 * dif);",
+        "  float m = texture2D(uMask, vUv).r;",
+        "  col = mix(col * vec3(.5, .56, .7), col, .3 + .7 * m);",
+        "  col = mix(col, uFog, smoothstep(uFogNear, uFogFar, vDist));",
+        "  gl_FragColor = vec4(col, 1.);",
+        "}"
+      ].join("\n")
+    });
+
+    // Xinjiang mask (darkens the area outside the region)
+    var mc = document.createElement("canvas"); mc.width = 768; mc.height = 512;
+    var mx = mc.getContext("2d"); mx.fillStyle = "#000"; mx.fillRect(0, 0, 768, 512);
+    try { mx.filter = "blur(3px)"; } catch (e) {}
+    mx.fillStyle = "#fff"; mx.beginPath();
+    (window.GEO ? GEO.xinjiang : []).forEach(function (poly) {
+      poly[0].forEach(function (pt, i) { var x = (pt[0] - LON0) / (LON1 - LON0) * 768, y = (LAT1 - pt[1]) / (LAT1 - LAT0) * 512; i ? mx.lineTo(x, y) : mx.moveTo(x, y); });
+      mx.closePath();
+    });
+    mx.fill();
+    uniforms.uMask.value = new THREE.CanvasTexture(mc);
+
+
+    // ---- helicopter ----
+    scene.add(new THREE.HemisphereLight(0xe6f1ff, 0x3b3424, .95));
+    var sun = new THREE.DirectionalLight(0xffffff, .9); sun.position.set(-2, 3, 2); scene.add(sun);
+    function buildHeli() {
+      var g = new THREE.Group();
+      var red = new THREE.MeshStandardMaterial({ color: 0xd12a45, roughness: .4, metalness: .25 });
+      var white = new THREE.MeshStandardMaterial({ color: 0xf2f4f8, roughness: .5 });
+      var dark = new THREE.MeshStandardMaterial({ color: 0x1b2534, roughness: .35, metalness: .4 });
+      var glass = new THREE.MeshStandardMaterial({ color: 0x9fd0ff, roughness: .08, metalness: .6, transparent: true, opacity: .88 });
+      function m(geo, mat, x, y, z) { var o = new THREE.Mesh(geo, mat); o.position.set(x, y, z); g.add(o); return o; }
+      m(new THREE.SphereGeometry(.16, 20, 14), red, 0, 0, 0).scale.set(1, .85, 1.55);
+      m(new THREE.SphereGeometry(.12, 16, 12), glass, 0, .035, -.15).scale.set(1, .8, 1.1);
+      m(new THREE.CylinderGeometry(.028, .05, .56, 10), white, 0, .04, .42).rotation.x = Math.PI / 2;
+      m(new THREE.BoxGeometry(.018, .15, .09), red, 0, .11, .68);
+      m(new THREE.BoxGeometry(.13, .015, .05), red, 0, .05, .66);
+      m(new THREE.BoxGeometry(.33, .03, .05), white, 0, -.02, .02);
+      var tail = new THREE.Group(); tail.position.set(.03, .1, .69); g.add(tail);
+      tail.add(new THREE.Mesh(new THREE.BoxGeometry(.008, .17, .02), dark));
+      m(new THREE.CylinderGeometry(.016, .02, .08, 8), dark, 0, .165, 0);
+      var rotor = new THREE.Group(); rotor.position.set(0, .21, 0); g.add(rotor);
+      [0, Math.PI / 2].forEach(function (an) { var bl = new THREE.Mesh(new THREE.BoxGeometry(1.0, .008, .04), dark); bl.rotation.y = an; rotor.add(bl); });
+      var disc = new THREE.Mesh(new THREE.CircleGeometry(.5, 32), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: .12, side: THREE.DoubleSide, depthWrite: false }));
+      disc.rotation.x = -Math.PI / 2; rotor.add(disc);
+      [-1, 1].forEach(function (sd) {
+        m(new THREE.BoxGeometry(.018, .018, .46), dark, sd * .12, -.17, 0);
+        m(new THREE.BoxGeometry(.012, .1, .012), dark, sd * .1, -.12, -.1);
+        m(new THREE.BoxGeometry(.012, .1, .012), dark, sd * .1, -.12, .1);
+      });
+      g.rotation.order = "YXZ";
+      scene.add(g);
+      return { g: g, rotor: rotor, tail: tail };
+    }
+    var heli = buildHeli();
+
+    var K = [], pinEls = [], regionEls = [], mini = null;
+    var REGIONS = [["アルタイ山脈", 88.6, 47.7], ["ジュンガル盆地", 86.0, 45.2], ["天 山 山 脈", 83.0, 42.4], ["タクラマカン砂漠", 83.0, 39.2], ["崑 崙 山 脈", 84.0, 36.3], ["パミール高原", 74.6, 37.6]];
+    var SEAS = { "": [0, 0, 4400], "夏": [0, 0, 4500], "秋": [0, 1, 3900], "冬": [1, 0, 3300], "春": [0, 0, 3300] };
+
+    function decode() {
+      var bin = atob(T.z), u8 = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+      var stream = new Blob([u8]).stream().pipeThrough(new DecompressionStream("deflate"));
+      return new Response(stream).arrayBuffer().then(function (buf) {
+        var d = new Int16Array(buf), out = new Float32Array(d.length);
+        for (var y = 0; y < H; y++) { var acc = 0; for (var x = 0; x < W; x++) { var k = y * W + x; acc += d[k]; out[k] = acc * T.unit; } }
+        return out;
+      });
+    }
+
+
+    function build() {
+      var geo = new THREE.PlaneGeometry(PW, PH, W - 1, H - 1); geo.rotateX(-Math.PI / 2);
+      var pos = geo.attributes.position, aH = new Float32Array(W * H);
+      for (var k = 0; k < W * H; k++) { var h = heights[k]; pos.setY(k, Math.max(h, -200) * SY); aH[k] = h; }
+      geo.setAttribute("aH", new THREE.BufferAttribute(aH, 1));
+      geo.computeVertexNormals();
+      scene.add(new THREE.Mesh(geo, mat));
+      // glowing Xinjiang border draped on the terrain
+      if (window.GEO) GEO.xinjiang.forEach(function (poly) {
+        var r = poly[0], pts = [];
+        for (var i = 0; i < r.length - 1; i++) {
+          var a = r[i], b = r[i + 1], n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / .04));
+          for (var j = 0; j < n; j++) { var lo = a[0] + (b[0] - a[0]) * j / n, la = a[1] + (b[1] - a[1]) * j / n; pts.push(new THREE.Vector3(wx(lo), Math.max(0, hAt(lo, la)) * SY + .012, wz(la))); }
+        }
+        if (pts.length > 2) { pts.push(pts[0]); scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x9fd0ff, transparent: true, opacity: .9 }))); }
+      });
+
+      K = STOPS.map(function (st) {
+        var se = SEAS[st.season] || SEAS[""];
+        return { t: new THREE.Vector3(wx(st.lon), Math.max(0, hAt(st.lon, st.lat)) * SY, wz(st.lat)), d: st.dist, p: st.pitch, h: st.head, w: se[0], a: se[1], s: se[2] };
+      });
+      var pins = document.getElementById("fly-pins");
+      STOPS.forEach(function (st, i) {
+        if (!st.img) { pinEls.push(null); return; }
+        var e = document.createElement("button"); e.type = "button"; e.className = "fly-pin"; e.textContent = shortName(st);
+        e.setAttribute("aria-label", shortName(st) + "へヘリで移動");
+        e.addEventListener("click", function () { go(i); });
+        pins.appendChild(e);
+        pinEls.push({ el: e, v: new THREE.Vector3(wx(st.lon), K[i].t.y + .02, wz(st.lat)) });
+      });
+      REGIONS.forEach(function (r) {
+        var e = document.createElement("div"); e.className = "fly-region"; e.textContent = r[0]; e.setAttribute("aria-hidden", "true"); pins.appendChild(e);
+        regionEls.push({ el: e, v: new THREE.Vector3(wx(r[1]), Math.max(0, hAt(r[1], r[2])) * SY + .1, wz(r[2])) });
+      });
+      var svg = document.getElementById("fly-mini");
+      if (svg && window.d3 && window.GEO) {
+        var xjf = { type: "MultiPolygon", coordinates: fixWinding(GEO.xinjiang) };
+        var mp = d3.geoEquirectangular().fitExtent([[8, 8], [152, 112]], xjf), mpath = d3.geoPath(mp);
+        var add = function (tag, at2) { var e = document.createElementNS(NS, tag); Object.keys(at2).forEach(function (k) { e.setAttribute(k, at2[k]); }); svg.appendChild(e); return e; };
+        add("path", { d: mpath(xjf), class: "o" });
+        add("path", { d: d3.line()(STOPS.filter(function (s) { return s.img; }).map(function (s) { return mp([s.lon, s.lat]); })), class: "trail" });
+        var dots = STOPS.map(function (s, i) {
+          if (!s.img) return null;
+          var q = mp([s.lon, s.lat]);
+          var c = add("circle", { cx: q[0], cy: q[1], r: 4, class: "s" });
+          var ttl = document.createElementNS(NS, "title"); ttl.textContent = shortName(s) + "へ"; c.appendChild(ttl);
+          c.addEventListener("click", function () { go(i); });
+          return c;
+        });
+        mini = { mp: mp, dots: dots, me: add("circle", { cx: 0, cy: 0, r: 6, class: "me" }) };
+      }
+      if (location.protocol !== "file:") {
+        new THREE.TextureLoader().load("images/xj-satellite.jpg", function (tex) {
+          tex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+          uniforms.uTex.value = tex; uniforms.uHasTex.value = 1; kick();
+        });
+      }
+    }
+
+    function sm(a, b, x) { x = Math.max(0, Math.min(1, (x - a) / (b - a))); return x * x * (3 - 2 * x); }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function alerp(a, b, t) { var d = ((b - a + 540) % 360) - 180; return a + d * t; }
+    function copyS(s0) { return { t: s0.t.clone(), d: s0.d, p: s0.p, h: s0.h, w: s0.w, a: s0.a, s: s0.s }; }
+    var cur = null, lastHud = "", lastNow = 0;
+
+    flyToImpl = function (k) {
+      k = Math.max(0, Math.min(N, k));
+      if (k === target && (flight || at === k)) return;
+      target = k;
+      var from = copyS(cur || K[at]), to = K[k];
+      var dx = to.t.x - from.t.x, dz = to.t.z - from.t.z, travel = Math.hypot(dx, dz);
+      var dur = reduce ? 0 : Math.min(8000, Math.max(3600, 2600 + travel * 520));
+      flight = { from: from, to: to, k: k, t0: performance.now(), dur: dur, travel: travel,
+        hd: travel > .3 ? Math.atan2(dx, -dz) / D2R : to.h, bump: Math.min(1.1, travel / (from.d + to.d) * .5) };
+      showCard(-1);
+      pinEls.forEach(function (pe, j) { if (pe) pe.el.classList.toggle("on", j === k); });
+      if (mini) mini.dots.forEach(function (dd, j) { if (dd) dd.setAttribute("class", "s" + (j === k ? " on" : "")); });
+      kick();
+    };
+
+    function state(now) {
+      if (!flight) {
+        var s0 = copyS(K[at]);
+        if (motion) { s0.h += Math.sin(now * .00016) * 4; s0.d *= 1 + Math.sin(now * .00011) * .03; }
+        return { s: s0, u: 1, fl: 0, e: 1 };
+      }
+      var u = flight.dur ? Math.max(0, Math.min(1, (now - flight.t0) / flight.dur)) : 1;
+      var e = .5 - .5 * Math.cos(Math.PI * u), F = flight.from, T2 = flight.to, arc = Math.sin(Math.PI * u);
+      var s1 = {
+        t: F.t.clone().lerp(T2.t, e),
+        d: Math.exp(lerp(Math.log(F.d), Math.log(T2.d), e)) * (1 + flight.bump * arc),
+        p: Math.min(68, lerp(F.p, T2.p, e) + flight.bump * 9 * arc),
+        h: alerp(alerp(F.h, flight.hd, sm(0, .22, u)), T2.h, sm(.72, 1, u)),
+        w: lerp(F.w, T2.w, e), a: lerp(F.a, T2.a, e), s: lerp(F.s, T2.s, e)
+      };
+      var res = { s: s1, u: u, fl: sm(0, .14, u) * (1 - sm(.86, 1, u)), e: e, k: flight.k, travel: flight.travel, hd: flight.hd };
+      if (u >= 1) { at = flight.k; flight = null; showCard(at); }
+      return res;
+    }
+
+    var tmpV = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
+    var elSeason = document.getElementById("fly-season"), elElev = document.getElementById("fly-elev");
+    function render(now) {
+      var dt = lastNow ? Math.min(.05, (now - lastNow) / 1000) : 0; lastNow = now;
+      var R = state(now), S0 = R.s, t = S0.t, d = S0.d;
+      cur = S0;
+      var head = S0.h * D2R, pr = S0.p * D2R;
+      cam.position.set(t.x - Math.sin(head) * d * Math.cos(pr), t.y + d * Math.sin(pr), t.z + Math.cos(head) * d * Math.cos(pr));
+      var gl = Math.max(0, hAt(LONC + cam.position.x / SX, LATC - cam.position.z / SZ)) * SY;
+      if (cam.position.y < gl + .06) cam.position.y = gl + .06;
+      cam.lookAt(t.x, t.y + d * .05, t.z);
+
+      // helicopter: parked to the right of the view at a stop, centre stage while flying
+      var fl = R.fl, rx = Math.cos(head), rz = Math.sin(head);
+      var hx = t.x + rx * d * .3 * (1 - fl), hz = t.z + rz * d * .3 * (1 - fl);
+      var hy = t.y + d * (.12 + .03 * fl) + Math.sin(now / 650) * d * .006;
+      var hg = Math.max(0, hAt(LONC + hx / SX, LATC - hz / SZ)) * SY;
+      heli.g.position.set(hx, Math.max(hy, hg + d * .06), hz);
+      heli.g.scale.setScalar(d * .085);
+      heli.g.rotation.y = -alerp(S0.h + 40, R.hd !== undefined ? R.hd : S0.h, fl) * D2R;
+      heli.g.rotation.x = -.24 * fl;
+      heli.g.rotation.z = Math.sin(now / 900) * .03;
+      if (motion) { heli.rotor.rotation.y += dt * 26; heli.tail.rotation.x += dt * 40; }
+
+      uniforms.uWinter.value = S0.w; uniforms.uAutumn.value = S0.a; uniforms.uSnow.value = S0.s;
+      uniforms.uFogNear.value = d * 1.6; uniforms.uFogFar.value = d * 6 + 4;
+      renderer.render(scene, cam);
+
+      // HUD
+      var hud;
+      if (R.k !== undefined) {
+        hud = "🚁 " + shortName(STOPS[R.k]) + "へ移動中 ・ 残り約" + nfmt(Math.max(0, Math.round((1 - R.e) * R.travel * 100 / 10) * 10)) + "km";
+      } else {
+        var st = STOPS[at]; hud = st.season ? st.season + "の景色" : (at === 0 ? "新疆の全体" : "ゴール");
+      }
+      if (hud !== lastHud) {
+        lastHud = hud; elSeason.textContent = hud;
+        elSeason.setAttribute("data-s", R.k !== undefined ? "" : STOPS[at].season);
+        var cs = STOPS[R.k !== undefined ? R.k : at];
+        elCount.textContent = cs.img ? String(R.k !== undefined ? R.k : at).padStart(2, "0") + " / " + String(N - 1).padStart(2, "0") : (cs.tag === "START" ? "▶ START" : "↺ GOAL");
+        elCount.classList.toggle("start", !cs.img);
+      }
+      var tl = LONC + t.x / SX, ta = LATC - t.z / SZ;
+      elElev.hidden = false; elElev.textContent = "N " + ta.toFixed(2) + "°  E " + tl.toFixed(2) + "°";
+      if (mini) { var q = mini.mp([tl, ta]); mini.me.setAttribute("cx", q[0].toFixed(1)); mini.me.setAttribute("cy", q[1].toFixed(1)); }
+
+      var w = cv.clientWidth, h = cv.clientHeight;
+      pinEls.forEach(function (pe, k) {
+        if (!pe) return;
+        tmpV.copy(pe.v).project(cam);
+        var show = tmpV.z < 1 && Math.abs(tmpV.x) < 1.05 && Math.abs(tmpV.y) < 1.05;
+        pe.el.style.visibility = show ? "visible" : "hidden";
+        pe.el.style.opacity = k === target || d < 7 ? 1 : .6;
+        if (show) pe.el.style.transform = "translate(" + ((tmpV.x + 1) / 2 * w - 10).toFixed(1) + "px," + ((1 - tmpV.y) / 2 * h - 14).toFixed(1) + "px)";
+      });
+      var ro = sm(6, 14, d);
+      regionEls.forEach(function (re) {
+        tmpV.copy(re.v).project(cam);
+        re.el.style.opacity = tmpV.z < 1 ? ro : 0;
+        re.el.style.left = ((tmpV.x + 1) / 2 * w).toFixed(1) + "px"; re.el.style.top = ((1 - tmpV.y) / 2 * h).toFixed(1) + "px";
+      });
+    }
+
+    function frame(now) {
+      raf = 0; if (!ready) return;
+      render(now || performance.now());
+      if (visible && (motion || flight)) raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && ready && (visible || !motion)) raf = requestAnimationFrame(frame); }
+    function resize() {
+      var w = root.clientWidth, h = root.clientHeight; if (!w || !h) return;
+      renderer.setSize(w, h, false); cam.aspect = w / h;
+      cam.fov = w / h < .8 ? 55 : 40; cam.updateProjectionMatrix();
+      kick();
+    }
+    window.addEventListener("resize", resize);
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible) kick(); }).observe(root);
+    else visible = true;
+
+    decode().then(function (h) {
+      heights = h; build(); ready = true; resize(); render(performance.now()); kick();
+    }).catch(function () { no3d(); });
+  })();
+
+  /* ---------- topbar / nav / keys ---------- */
+  var topbar = document.getElementById("topbar"), hero = document.getElementById("top");
+  var sections = Array.prototype.slice.call(document.querySelectorAll("#top, section.chapter"));
+  var tocLinks = Array.prototype.slice.call(document.querySelectorAll(".toc a"));
+  var bar = document.getElementById("progress");
+  function absTop(el) { return el.getBoundingClientRect().top + window.scrollY; }
+  function currentIndex() {
+    var y = window.scrollY + window.innerHeight * 0.35, idx = 0;
+    sections.forEach(function (s, i) { if (absTop(s) <= y) idx = i; });
+    return idx;
+  }
+  function onScroll() {
+    var id = sections[currentIndex()].id;
+    tocLinks.forEach(function (a) { a.classList.toggle("on", a.getAttribute("href") === "#" + id); });
+    topbar.classList.toggle("solid", window.scrollY > hero.offsetHeight - 80);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    if (bar) bar.style.transform = "scaleX(" + (h > 0 ? window.scrollY / h : 0) + ")";
+  }
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  document.addEventListener("keydown", function (e) {
+    if (e.target.closest && e.target.closest("input, textarea, .jp, .track")) return;
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    var i = currentIndex() + (e.key === "ArrowRight" ? 1 : -1);
+    i = Math.max(0, Math.min(sections.length - 1, i));
+    e.preventDefault();
+    window.scrollTo({ top: absTop(sections[i]) - (i === 0 ? 0 : 56), behavior: reduce ? "auto" : "smooth" });
+  });
+
+  /* ---------- food tilt ---------- */
+  if (!reduce) {
+    document.querySelectorAll(".dish .ph").forEach(function (ph) {
+      ph.addEventListener("pointermove", function (e) {
+        var r = ph.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        ph.style.transform = "rotateX(" + ((.5 - y) * 10) + "deg) rotateY(" + ((x - .5) * 12) + "deg) translateZ(0)";
+        ph.style.setProperty("--mx", (x * 100) + "%"); ph.style.setProperty("--my", (y * 100) + "%");
+      });
+      ph.addEventListener("pointerleave", function () { ph.style.transform = ""; });
+    });
+  }
+
+  if (!motion) return;
+
+  /* ---------- hero intro ---------- */
+  var title = document.getElementById("title"), charIndex = 0;
+  (function split(node) {
+    Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+      if (n.nodeType === 3) {
+        var frag = document.createDocumentFragment();
+        Array.from(n.textContent).forEach(function (c) { var s = document.createElement("span"); s.className = "ch"; s.style.setProperty("--i", charIndex++); s.textContent = c; s.setAttribute("aria-hidden", "true"); frag.appendChild(s); });
+        node.replaceChild(frag, n);
+      }
+    });
+  })(title);
+  title.setAttribute("aria-label", "ウルムチから来ました");
+  document.documentElement.classList.add("intro");
+  gsap.to(".hero__img", { yPercent: 10, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+  gsap.to(".hero__body", { yPercent: -30, opacity: .2, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+
+  /* ---------- reveal on enter ---------- */
+  ScrollTrigger.batch(".head > *, .fact, .city-intro > *, .city-photo, .city-row figure, .clock, .sunrow, .dish, .culture-grid figure, .phrase, .stack > div:not(.phrases), .tip, .step, .globe-stage, .hud > *, .sea-card, .music-banner, .inst", {
+    start: "top 92%", once: true,
+    onEnter: function (els) { gsap.from(els, { y: 44, opacity: 0, duration: 1, ease: "power3.out", stagger: .09, overwrite: true }); }
+  });
+
+  /* ---------- image parallax ---------- */
+  gsap.utils.toArray(".city-grid .ph img, .culture-grid .ph img").forEach(function (img) {
+    gsap.fromTo(img, { scale: 1.14 }, { scale: 1, ease: "none", scrollTrigger: { trigger: img, start: "top bottom", end: "bottom 55%", scrub: true } });
+  });
+
+  /* ---------- count up ---------- */
+  var nf = new Intl.NumberFormat("ja-JP");
+  gsap.utils.toArray("[data-count]").forEach(function (el) {
+    var target = +el.getAttribute("data-count");
+    ScrollTrigger.create({ trigger: el, start: "top 90%", once: true, onEnter: function () {
+      var o = { v: 0 };
+      gsap.to(o, { v: target, duration: 1.8, ease: "power3.out", onUpdate: function () { el.textContent = nf.format(Math.round(o.v)); } });
+    } });
+  });
+
+  /* ---------- map sequence ---------- */
+  if (jpG && mapParts.xj) {
+    ScrollTrigger.create({ trigger: "#map", start: "top 80%", once: true, onEnter: function () {
+      var len = mapParts.xj.getTotalLength(), rlen = mapParts.route.getTotalLength();
+      var tl = gsap.timeline();
+      tl.fromTo([mapParts.xj, mapParts.glow], { strokeDasharray: len, strokeDashoffset: len, fillOpacity: 0 },
+                { strokeDashoffset: 0, duration: 2, ease: "power2.inOut" })
+        .to(mapParts.xj, { fillOpacity: 1, duration: .8 }, "-=.5")
+        .set([mapParts.xj, mapParts.glow], { strokeDasharray: "none" })
+        .from(mapParts.pins.map(function (g) { return g.querySelector(".dot"); }), { attr: { r: 0 }, duration: .5, stagger: .08, ease: "back.out(4)" }, "-=.6")
+        .from(mapParts.pins.map(function (g) { return g.querySelector("text"); }), { opacity: 0, x: -6, duration: .5, stagger: .08 }, "<")
+        .fromTo(mapParts.route, { strokeDasharray: "0 " + rlen }, { strokeDasharray: rlen + " 0", duration: 1.4, ease: "power1.inOut",
+          onComplete: function () { mapParts.route.style.strokeDasharray = ""; } }, "-=.2")
+        .from(mapParts.pole, { opacity: 0, duration: .5 }, "<")
+        .add(function () { showNeighbors(); }, "+=.1")
+        .add(function () { if (jpPos.x === START.x && jpPos.y === START.y) moveJp(0, 0); }, "+=3.8");
+    } });
+  }
+
+  /* ---------- sea map sequence ---------- */
+  if (seaParts) {
+    ScrollTrigger.create({ trigger: "#sea", start: "top 75%", once: true, onEnter: function () {
+      var o = { r: 0 }, sp = seaParts, rl = sp.ray.getTotalLength();
+      gsap.set([sp.dot, sp.halo, sp.distT, sp.coastT], { opacity: 0 });
+      gsap.set(sp.ray, { strokeDasharray: rl, strokeDashoffset: rl });
+      gsap.timeline()
+        .to(o, { r: sp.R, duration: 2.2, ease: "power2.inOut", onUpdate: function () { sp.reach.setAttribute("d", sp.path(d3.geoCircle().center(sp.U).radius(Math.max(.01, o.r))())); } })
+        .to(sp.ray, { strokeDashoffset: 0, duration: .9, ease: "power2.out" }, "-=.3")
+        .to([sp.dot, sp.halo], { opacity: 1, duration: .3 }, "-=.2")
+        .to([sp.distT, sp.coastT], { opacity: 1, duration: .5 }, "-=.1")
+        .from(sp.star, { opacity: 0, duration: .5 });
+    } });
+  }
+
+  /* ---------- marquee ---------- */
+  gsap.utils.toArray(".marquee__row").forEach(function (row) {
+    var dir = +row.getAttribute("data-dir");
+    gsap.fromTo(row, { xPercent: dir > 0 ? -30 : 0 }, { xPercent: dir > 0 ? 0 : -30, ease: "none", scrollTrigger: { trigger: ".marquee", start: "top bottom", end: "bottom top", scrub: .6 } });
+  });
+
+  /* ---------- sun bars grow ---------- */
+  ScrollTrigger.create({ trigger: "#sun", start: "top 85%", once: true, onEnter: function () {
+    gsap.from("#sun .day", { scaleX: 0, duration: 1.4, ease: "expo.out", stagger: .15 });
+  } });
+
+  /* ---------- making timeline fill ---------- */
+  gsap.fromTo("#steps-fill", { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: { trigger: ".steps-wrap", start: "top 70%", end: "bottom 60%", scrub: true } });
+
+  window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+})();
+</script>
